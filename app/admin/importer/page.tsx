@@ -1,7 +1,7 @@
 import {Header} from '@/components/Header'
 import {Footer} from '@/components/Footer'
 import {WorkspaceShell} from '@/components/workspace/WorkspaceTools'
-import {GraphicsTodayImporter} from '@/components/workspace/GraphicsTodayImporter'
+import {GraphicsSmartImporter} from '@/components/workspace/GraphicsSmartImporter'
 
 export default function Page() {
   return (
@@ -10,9 +10,9 @@ export default function Page() {
       <WorkspaceShell
         eyebrow="Workspace Module"
         title="Graphics Import"
-        description="Select plan sheets visually and publish them directly to an existing project."
+        description="Review AI-suggested plan graphics and publish them directly to an existing project."
       >
-        <GraphicsTodayImporter />
+        <GraphicsSmartImporter />
       </WorkspaceShell>
       <Footer />
     </main>
