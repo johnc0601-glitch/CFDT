@@ -1,0 +1,15 @@
+RC4
+- unified spacing
+- standardized cards
+- official source badges
+- compact metadata
+- empty states
+- document count
+- graphic count
+- reusable status badge
+- header metadata
+- cleanup placeholders
+- consistent typography
+- mobile spacing
+- section consistency
+- reusable utility components

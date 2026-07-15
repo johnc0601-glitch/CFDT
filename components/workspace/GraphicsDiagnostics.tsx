@@ -1,0 +1,144 @@
+'use client'
+
+import {useEffect, useState} from 'react'
+
+export function GraphicsDiagnostics() {
+  const [slug, setSlug] = useState('hilton-bluffs')
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
+  const [requestNumber, setRequestNumber] = useState(0)
+  const [message, setMessage] = useState('')
+
+  async function inspect() {
+    const nextRequest = requestNumber + 1
+    setRequestNumber(nextRequest)
+    setLoading(true)
+    setMessage(`Running inspection ${nextRequest}…`)
+
+    try {
+      const response = await fetch(
+        `/api/admin/graphics-diagnostics?slug=${encodeURIComponent(slug)}&refresh=${Date.now()}`,
+        {
+          cache: 'no-store',
+          headers: {'Cache-Control': 'no-cache'},
+        },
+      )
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(
+          result.error || 'Graphics diagnostics failed.',
+        )
+      }
+
+      setData(result)
+      setMessage(
+        `Inspection ${nextRequest} completed at ${new Date(result.checkedAt).toLocaleTimeString()}.`,
+      )
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Graphics diagnostics failed.',
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    void inspect()
+  }, [])
+
+  return (
+    <div className="space-y-6">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#6f8b63]">
+          Verified live records
+        </p>
+        <h2 className="mt-2 text-2xl font-bold">
+          Graphics Diagnostics
+        </h2>
+
+        <div className="mt-5 flex gap-3">
+          <input
+            value={slug}
+            onChange={(event) => setSlug(event.target.value)}
+            className="h-11 flex-1 rounded-lg border border-slate-300 px-3"
+          />
+          <button
+            type="button"
+            onClick={() => void inspect()}
+            disabled={loading}
+            className="rounded-lg bg-[#244f73] px-5 py-3 font-bold text-white disabled:opacity-50"
+          >
+            {loading ? 'Inspecting…' : 'Inspect now'}
+          </button>
+        </div>
+
+        {data && (
+          <p className="mt-4 text-sm text-slate-600">
+            Sanity: {data.projectId} / {data.dataset} · token{' '}
+            {data.usingToken ? 'active' : 'not used'} · checked{' '}
+            {new Date(data.checkedAt).toLocaleString()}
+          </p>
+        )}
+      </section>
+
+      {data && (
+        <>
+          <section className="grid gap-4 md:grid-cols-3">
+            {[
+              ['Projects found', data.projects?.length || 0],
+              ['Matching graphics', data.matchingGraphics?.length || 0],
+              ['Public graphics', data.publicGraphics?.length || 0],
+            ].map(([label, count]) => (
+              <article
+                key={String(label)}
+                className={`rounded-2xl p-5 ring-1 ${
+                  Number(count) > 0
+                    ? 'bg-emerald-50 ring-emerald-200'
+                    : 'bg-red-50 ring-red-200'
+                }`}
+              >
+                <p className="text-xs font-bold uppercase">{label}</p>
+                <p className="mt-2 text-3xl font-bold">{count}</p>
+              </article>
+            ))}
+          </section>
+
+          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h3 className="text-xl font-bold">Matching project</h3>
+            <pre className="mt-4 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-white">
+              {JSON.stringify(data.projects, null, 2)}
+            </pre>
+          </section>
+
+          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h3 className="text-xl font-bold">
+              All projectGraphic records
+            </h3>
+            <pre className="mt-4 max-h-[600px] overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-white">
+              {JSON.stringify(data.allGraphics, null, 2)}
+            </pre>
+          </section>
+
+          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h3 className="text-xl font-bold">
+              Public query result
+            </h3>
+            <pre className="mt-4 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-white">
+              {JSON.stringify(data.publicGraphics, null, 2)}
+            </pre>
+          </section>
+        </>
+      )}
+
+      {message && (
+        <div className="rounded-xl border border-slate-300 bg-white p-4 text-sm font-semibold">
+          {message}
+        </div>
+      )}
+    </div>
+  )
+}

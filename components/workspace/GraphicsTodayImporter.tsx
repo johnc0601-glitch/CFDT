@@ -1,0 +1,749 @@
+'use client'
+
+import {useEffect, useMemo, useRef, useState} from 'react'
+
+type PageRole = 'primary' | 'graphic' | 'none'
+
+type PageChoice = {
+  page: number
+  role: PageRole
+  thumbnail: string
+  category: string
+  title: string
+  description: string
+}
+
+type SanityProjectOption = {
+  id: string
+  name: string
+  slug: string
+}
+
+const categories = [
+  'Hero',
+  'Location',
+  'Site Plan',
+  'Existing Conditions',
+  'Amenity Plan',
+  'Landscape Plan',
+  'Utility Plan',
+  'Lighting Plan',
+  'Entrance Plan',
+  'Traffic Exhibit',
+  'Rendering',
+  'Photo',
+  'Other',
+]
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+function downloadBlob(filename: string, blob: Blob) {
+  const url = URL.createObjectURL(blob)
+  const anchor = window.document.createElement('a')
+  anchor.href = url
+  anchor.download = filename
+  anchor.click()
+  URL.revokeObjectURL(url)
+}
+
+export function GraphicsTodayImporter() {
+  const [file, setFile] = useState<File | null>(null)
+  const [projectName, setProjectName] = useState('')
+  const [projectSlug, setProjectSlug] = useState('')
+  const [pages, setPages] = useState<PageChoice[]>([])
+  const [loading, setLoading] = useState(false)
+  const [publishing, setPublishing] = useState(false)
+  const [renderedCount, setRenderedCount] = useState(0)
+  const [message, setMessage] = useState('')
+  const [projectOptions, setProjectOptions] = useState<SanityProjectOption[]>([])
+  const [autoMatched, setAutoMatched] = useState(false)
+  const pdfRef = useRef<any>(null)
+  const cancelled = useRef(false)
+
+  useEffect(() => {
+    return () => {
+      cancelled.current = true
+    }
+  }, [])
+
+  const selected = useMemo(
+    () => pages.filter((item) => item.role !== 'none'),
+    [pages],
+  )
+
+  async function loadProjectOptions() {
+    try {
+      const response = await fetch('/api/graphics/projects', {
+        cache: 'no-store',
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Could not load website projects.')
+      }
+
+      const options = Array.isArray(result.projects)
+        ? result.projects
+        : []
+
+      setProjectOptions(options)
+      return options as SanityProjectOption[]
+    } catch {
+      setProjectOptions([])
+      return [] as SanityProjectOption[]
+    }
+  }
+
+  function normalizeMatchText(value: string) {
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+  }
+
+  function findBestProjectMatch(
+    text: string,
+    options: SanityProjectOption[],
+  ) {
+    const normalizedText = ` ${normalizeMatchText(text)} `
+
+    const ranked = options
+      .map((option) => {
+        const normalizedName = normalizeMatchText(option.name)
+        const normalizedSlug = normalizeMatchText(option.slug)
+        let score = 0
+
+        if (
+          normalizedName &&
+          normalizedText.includes(` ${normalizedName} `)
+        ) {
+          score += 100 + normalizedName.length
+        }
+
+        if (
+          normalizedSlug &&
+          normalizedText.includes(` ${normalizedSlug} `)
+        ) {
+          score += 80 + normalizedSlug.length
+        }
+
+        const words = normalizedName
+          .split(' ')
+          .filter((word) => word.length >= 4)
+
+        for (const word of words) {
+          if (normalizedText.includes(` ${word} `)) {
+            score += 5
+          }
+        }
+
+        return {option, score}
+      })
+      .sort((a, b) => b.score - a.score)
+
+    return ranked[0]?.score >= 20
+      ? ranked[0].option
+      : null
+  }
+
+  async function loadPdf(nextFile: File | null) {
+    if (!nextFile) return
+
+    setLoading(true)
+    setMessage('Reading plan title and rendering page thumbnails…')
+    setFile(nextFile)
+    setAutoMatched(false)
+    const initialName = nextFile.name
+      .replace(/\.pdf$/i, '')
+      .replace(/[-_]+/g, ' ')
+    setProjectName(initialName)
+    setProjectSlug(slugify(initialName))
+    setPages([])
+    setRenderedCount(0)
+    cancelled.current = false
+
+    try {
+      const pdfjs = await import('pdfjs-dist')
+      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/build/pdf.worker.min.mjs',
+        import.meta.url,
+      ).toString()
+
+      const pdfDocument = await pdfjs.getDocument({
+        data: new Uint8Array(await nextFile.arrayBuffer()),
+      }).promise
+
+      pdfRef.current = pdfDocument
+
+      const options = projectOptions.length
+        ? projectOptions
+        : await loadProjectOptions()
+
+      let identificationText = nextFile.name
+      const pagesToRead = Math.min(3, pdfDocument.numPages)
+
+      for (let pageNumber = 1; pageNumber <= pagesToRead; pageNumber += 1) {
+        const identityPage = await pdfDocument.getPage(pageNumber)
+        const textContent = await identityPage.getTextContent()
+        identificationText += ' ' + textContent.items
+          .map((item: any) =>
+            typeof item?.str === 'string'
+              ? item.str
+              : '',
+          )
+          .join(' ')
+      }
+
+      const matchedProject = findBestProjectMatch(
+        identificationText,
+        options,
+      )
+
+      if (matchedProject) {
+        setProjectName(matchedProject.name)
+        setProjectSlug(matchedProject.slug)
+        setAutoMatched(true)
+      }
+
+      setPages(
+        Array.from({length: pdfDocument.numPages}, (_, index) => ({
+          page: index + 1,
+          role: 'none' as PageRole,
+          thumbnail: '',
+          category: index === 0 ? 'Hero' : 'Site Plan',
+          title: `Plan Sheet ${index + 1}`,
+          description: '',
+        })),
+      )
+
+      for (
+        let pageNumber = 1;
+        pageNumber <= pdfDocument.numPages;
+        pageNumber += 1
+      ) {
+        if (cancelled.current) return
+
+        const pdfPage = await pdfDocument.getPage(pageNumber)
+        const baseViewport = pdfPage.getViewport({scale: 1})
+        const scale = Math.min(0.42, 250 / baseViewport.width)
+        const viewport = pdfPage.getViewport({scale})
+        const canvas = window.document.createElement('canvas')
+        canvas.width = Math.ceil(viewport.width)
+        canvas.height = Math.ceil(viewport.height)
+
+        const context = canvas.getContext('2d')
+        if (!context) continue
+
+        await pdfPage.render({
+          canvas,
+          canvasContext: context,
+          viewport,
+        }).promise
+
+        const thumbnail = canvas.toDataURL('image/jpeg', 0.72)
+
+        setPages((current) =>
+          current.map((item) =>
+            item.page === pageNumber
+              ? {...item, thumbnail}
+              : item,
+          ),
+        )
+        setRenderedCount(pageNumber)
+
+        if (pageNumber % 4 === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 0))
+        }
+      }
+
+      setMessage(
+        matchedProject
+          ? `Matched this plan to ${matchedProject.name}. Rendered ${pdfDocument.numPages} pages.`
+          : `Rendered ${pdfDocument.numPages} pages. Confirm the website project before publishing.`,
+      )
+    } catch (error) {
+      pdfRef.current = null
+      setPages([])
+      setFile(null)
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Could not render the PDF.',
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function updatePage(pageNumber: number, patch: Partial<PageChoice>) {
+    setPages((current) =>
+      current.map((item) =>
+        item.page === pageNumber
+          ? {...item, ...patch}
+          : item,
+      ),
+    )
+  }
+
+  function selectPage(pageNumber: number, role: PageRole) {
+    setPages((current) =>
+      current.map((item) => {
+        if (role === 'primary') {
+          if (item.page === pageNumber) {
+            return {
+              ...item,
+              role: 'primary',
+              category: 'Hero',
+              title:
+                item.title.startsWith('Plan Sheet')
+                  ? `${projectName} — Overall Plan`
+                  : item.title,
+            }
+          }
+
+          if (item.role === 'primary') {
+            return {...item, role: 'none'}
+          }
+
+          return item
+        }
+
+        if (item.page !== pageNumber) return item
+
+        return {
+          ...item,
+          role,
+          category:
+            role === 'graphic' && item.category === 'Hero'
+              ? 'Site Plan'
+              : item.category,
+        }
+      }),
+    )
+  }
+
+  async function renderHighResolution(pageNumber: number) {
+    const pdfDocument = pdfRef.current
+    if (!pdfDocument) throw new Error('PDF is not loaded.')
+
+    const pdfPage = await pdfDocument.getPage(pageNumber)
+    const baseViewport = pdfPage.getViewport({scale: 1})
+    const maxWidth = 2400
+    const scale = Math.min(3, maxWidth / baseViewport.width)
+    const viewport = pdfPage.getViewport({scale})
+    const canvas = window.document.createElement('canvas')
+    canvas.width = Math.ceil(viewport.width)
+    canvas.height = Math.ceil(viewport.height)
+
+    const context = canvas.getContext('2d')
+    if (!context) throw new Error('Could not create image canvas.')
+
+    await pdfPage.render({
+      canvas,
+      canvasContext: context,
+      viewport,
+    }).promise
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (result) =>
+          result
+            ? resolve(result)
+            : reject(new Error('Could not create PNG image.')),
+        'image/png',
+      )
+    })
+
+    return blob
+  }
+
+  async function downloadSelected() {
+    if (!selected.length) {
+      setMessage('Select at least one sheet.')
+      return
+    }
+
+    setPublishing(true)
+    setMessage('Creating high-resolution graphics…')
+
+    try {
+      for (const item of selected) {
+        const blob = await renderHighResolution(item.page)
+        downloadBlob(
+          `${projectSlug || 'project'}-${item.category
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')}-page-${item.page}.png`,
+          blob,
+        )
+        await new Promise((resolve) => setTimeout(resolve, 200))
+      }
+
+      setMessage(`Downloaded ${selected.length} graphic image${selected.length === 1 ? '' : 's'}.`)
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Could not create graphics.',
+      )
+    } finally {
+      setPublishing(false)
+    }
+  }
+
+  async function publishSelected() {
+    if (!projectSlug) {
+      setMessage('Enter the project slug used by the website.')
+      return
+    }
+
+    if (!selected.length) {
+      setMessage('Select at least one sheet.')
+      return
+    }
+
+    setPublishing(true)
+    setMessage('Publishing graphics to Sanity…')
+
+    try {
+      let published = 0
+      const verifiedIds: string[] = []
+
+      for (let index = 0; index < selected.length; index += 1) {
+        const item = selected[index]
+        setMessage(
+          `Publishing ${index + 1} of ${selected.length}: ${item.title}`,
+        )
+
+        const image = await renderHighResolution(item.page)
+        const form = new FormData()
+        form.set('projectSlug', projectSlug)
+        form.set('title', item.title)
+        form.set('category', item.category)
+        form.set('caption', item.description)
+        form.set(
+          'publicDescription',
+          item.description ||
+            `Official project plan graphic from page ${item.page}.`,
+        )
+        form.set('sourceDocument', file?.name || 'Official project plan')
+        form.set('sourcePage', String(item.page))
+        form.set('displayOrder', String(index))
+        form.set(
+          'image',
+          image,
+          `${projectSlug}-${item.category
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')}-page-${item.page}.png`,
+        )
+
+        const response = await fetch('/api/graphics/publish', {
+          method: 'POST',
+          body: form,
+        })
+        const result = await response.json()
+
+        if (!response.ok) {
+          throw new Error(
+            result.error || `Could not publish page ${item.page}.`,
+          )
+        }
+
+        if (!result.verified || !result.graphic?._id) {
+          throw new Error(
+            `The server did not verify page ${item.page} in Sanity.`,
+          )
+        }
+
+        verifiedIds.push(result.graphic._id)
+        published += 1
+      }
+
+      setMessage(
+        `Verified ${published} graphic${published === 1 ? '' : 's'} in Sanity: ${verifiedIds.join(', ')}`,
+      )
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Graphics publishing failed.',
+      )
+    } finally {
+      setPublishing(false)
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#6f8b63]">
+          Graphics today
+        </p>
+        <h2 className="mt-2 text-2xl font-bold">
+          Select plan sheets and publish them
+        </h2>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
+          Choose the complete PDF, select the useful sheets visually, label them,
+          and publish high-resolution graphics directly to the existing project page.
+        </p>
+
+        <label className="mt-5 block cursor-pointer rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+          <span className="font-bold">Choose project-plan PDF</span>
+          <span className="mt-1 block text-sm text-slate-500">
+            The PDF stays in your browser.
+          </span>
+          <input
+            type="file"
+            accept=".pdf,application/pdf"
+            className="sr-only"
+            onChange={(event) =>
+              void loadPdf(event.target.files?.[0] || null)
+            }
+          />
+        </label>
+
+        {file && (
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <label>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Project name
+              </span>
+              <input
+                value={projectName}
+                onChange={(event) => {
+                  setProjectName(event.target.value)
+                  setProjectSlug(slugify(event.target.value))
+                  setAutoMatched(false)
+                }}
+                className="mt-2 h-11 w-full rounded-lg border border-slate-300 px-3"
+              />
+            </label>
+
+            <label>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Existing website project slug
+              </span>
+              <input
+                list="sanity-project-slugs"
+                value={projectSlug}
+                onChange={(event) => {
+                  const slug = slugify(event.target.value)
+                  setProjectSlug(slug)
+                  const matched = projectOptions.find(
+                    (option) => option.slug === slug,
+                  )
+                  if (matched) {
+                    setProjectName(matched.name)
+                  }
+                  setAutoMatched(Boolean(matched))
+                }}
+                className="mt-2 h-11 w-full rounded-lg border border-slate-300 px-3"
+              />
+              <datalist id="sanity-project-slugs">
+                {projectOptions.map((option) => (
+                  <option
+                    key={option.id}
+                    value={option.slug}
+                  >
+                    {option.name}
+                  </option>
+                ))}
+              </datalist>
+              <span className={`mt-2 block text-xs font-bold ${
+                autoMatched
+                  ? 'text-emerald-700'
+                  : 'text-amber-700'
+              }`}>
+                {autoMatched
+                  ? 'Matched automatically to an existing Sanity project.'
+                  : 'Not automatically matched. Choose an existing project slug.'}
+              </span>
+            </label>
+          </div>
+        )}
+
+        {file && (
+          <p className="mt-4 text-sm text-slate-600">
+            {renderedCount} of {pages.length} thumbnails rendered
+          </p>
+        )}
+      </section>
+
+      {pages.length > 0 && (
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div>
+              <h2 className="text-xl font-bold">Choose graphics</h2>
+              <p className="mt-2 text-sm text-slate-600">
+                Mark one sheet as Hero and any other useful sheets as Graphic.
+                Then set the website category and title.
+              </p>
+            </div>
+
+            <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-bold">
+              {selected.length} selected
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {pages.map((item) => (
+              <article
+                key={item.page}
+                className={`overflow-hidden rounded-xl border-2 ${
+                  item.role === 'primary'
+                    ? 'border-blue-600'
+                    : item.role === 'graphic'
+                      ? 'border-emerald-600'
+                      : 'border-slate-200'
+                }`}
+              >
+                <div className="bg-slate-100 p-2">
+                  {item.thumbnail ? (
+                    <img
+                      src={item.thumbnail}
+                      alt={`PDF page ${item.page}`}
+                      className="mx-auto max-h-72 w-auto object-contain"
+                    />
+                  ) : (
+                    <div className="flex h-56 items-center justify-center text-sm text-slate-500">
+                      Rendering page {item.page}…
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-3 p-4">
+                  <div className="flex items-center justify-between">
+                    <strong>Page {item.page}</strong>
+                    <span className="text-xs font-bold uppercase text-slate-500">
+                      {item.role}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => selectPage(item.page, 'primary')}
+                      className={`rounded-md px-2 py-2 text-xs font-bold ${
+                        item.role === 'primary'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-slate-100'
+                      }`}
+                    >
+                      Hero
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => selectPage(item.page, 'graphic')}
+                      className={`rounded-md px-2 py-2 text-xs font-bold ${
+                        item.role === 'graphic'
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-slate-100'
+                      }`}
+                    >
+                      Graphic
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => selectPage(item.page, 'none')}
+                      className="rounded-md bg-slate-100 px-2 py-2 text-xs font-bold"
+                    >
+                      Clear
+                    </button>
+                  </div>
+
+                  {item.role !== 'none' && (
+                    <>
+                      <select
+                        value={item.category}
+                        onChange={(event) =>
+                          updatePage(item.page, {
+                            category: event.target.value,
+                          })
+                        }
+                        className="h-11 w-full rounded-lg border border-slate-300 px-3"
+                      >
+                        {categories.map((category) => (
+                          <option key={category} value={category}>
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+
+                      <input
+                        value={item.title}
+                        onChange={(event) =>
+                          updatePage(item.page, {
+                            title: event.target.value,
+                          })
+                        }
+                        className="h-11 w-full rounded-lg border border-slate-300 px-3"
+                        placeholder="Graphic title"
+                      />
+
+                      <textarea
+                        value={item.description}
+                        onChange={(event) =>
+                          updatePage(item.page, {
+                            description: event.target.value,
+                          })
+                        }
+                        className="min-h-20 w-full rounded-lg border border-slate-300 p-3"
+                        placeholder="Plain-language description (optional)"
+                      />
+                    </>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {file && (
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <h2 className="text-xl font-bold">Finish</h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Download the PNG files for backup, or publish them directly to the
+            matching Sanity project.
+          </p>
+
+          <div className="mt-5 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => void downloadSelected()}
+              disabled={!selected.length || publishing || loading}
+              className="rounded-lg border border-slate-300 px-5 py-3 font-bold disabled:opacity-40"
+            >
+              Download selected PNGs
+            </button>
+
+            <button
+              type="button"
+              onClick={() => void publishSelected()}
+              disabled={!selected.length || !projectSlug || publishing || loading}
+              className="rounded-lg bg-[#244f73] px-5 py-3 font-bold text-white disabled:opacity-40"
+            >
+              {publishing
+                ? 'Publishing…'
+                : 'Publish graphics to website'}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {message && (
+        <div className="rounded-xl border border-slate-300 bg-white p-4 text-sm font-semibold">
+          {message}
+        </div>
+      )}
+    </div>
+  )
+}

@@ -1,0 +1,1 @@
+export function ProjectHeaderMeta({project}:any){return <div className="flex flex-wrap gap-3 text-sm"><span>{project.locationDescription}</span><span>•</span><span>{project.countyName}</span><span>•</span><span>{project.latestUpdateDate}</span></div>}

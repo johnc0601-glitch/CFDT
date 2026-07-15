@@ -1,0 +1,66 @@
+CFDT SANITY INSPECTOR + DEVELOPER REPAIR 1.0
+Backup: C:\CFDT\backups\sanity-inspector-developer-repair-2026-07-14T14-21-47-821Z
+Project schemas patched: 0
+
+
+> website@0.1.0 build
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.2s
+  Running TypeScript ...
+  Finished TypeScript in 3.6s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/32) ...
+  Generating static pages using 11 workers (8/32) 
+  Generating static pages using 11 workers (16/32) 
+  Generating static pages using 11 workers (24/32) 
+✓ Generating static pages using 11 workers (32/32) in 805ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ○ /admin/county-data
+├ ○ /admin/documents
+├ ○ /admin/importer
+├ ○ /admin/intake-wizard
+├ ○ /admin/modules
+├ ○ /admin/publish
+├ ○ /admin/sanity-inspector
+├ ○ /admin/timeline-updates
+├ ○ /admin/traffic
+├ ƒ /api/admin/sanity-inspector
+├ ƒ /api/admin/sanity-repair
+├ ƒ /api/graphics/projects
+├ ƒ /api/graphics/publish
+├ ƒ /api/importer/config
+├ ƒ /api/importer/extract
+├ ƒ /api/importer/extract-storage
+├ ƒ /api/importer/project-manifest
+├ ƒ /api/importer/projects
+├ ƒ /api/importer/publish
+├ ƒ /api/importer/publish-storage
+├ ƒ /api/storage/project-files
+├ ƒ /api/storage/sign-upload
+├ ƒ /counties/[slug]
+├ ○ /counties/brunswick
+├ ○ /counties/new-hanover
+├ ○ /counties/pender
+├ ○ /developers
+├ ○ /map
+├ ○ /meetings
+├ ƒ /projects/[slug]
+├ ○ /robots.txt
+├ ○ /search
+└ ○ /sitemap.xml
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+

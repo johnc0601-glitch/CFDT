@@ -1,0 +1,70 @@
+CFDT LIVE GRAPHICS FULL FIX 3.3
+Backup: C:\CFDT\backups\live-graphics-full-fix-2026-07-14T16-04-48-849Z
+
+
+> website@0.1.0 build
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.7s
+  Running TypeScript ...
+  Finished TypeScript in 3.8s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/33) ...
+  Generating static pages using 11 workers (8/33) 
+  Generating static pages using 11 workers (16/33) 
+  Generating static pages using 11 workers (24/33) 
+✓ Generating static pages using 11 workers (33/33) in 385ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ○ /admin/county-data
+├ ○ /admin/documents
+├ ○ /admin/graphic-schema
+├ ƒ /admin/graphics-diagnostics
+├ ○ /admin/importer
+├ ○ /admin/intake-wizard
+├ ○ /admin/modules
+├ ○ /admin/publish
+├ ○ /admin/sanity-inspector
+├ ○ /admin/timeline-updates
+├ ○ /admin/traffic
+├ ƒ /api/admin/graphic-schema
+├ ƒ /api/admin/graphics-diagnostics
+├ ƒ /api/admin/sanity-inspector
+├ ƒ /api/admin/sanity-repair
+├ ƒ /api/graphics/projects
+├ ƒ /api/graphics/publish
+├ ƒ /api/importer/config
+├ ƒ /api/importer/extract
+├ ƒ /api/importer/extract-storage
+├ ƒ /api/importer/project-manifest
+├ ƒ /api/importer/projects
+├ ƒ /api/importer/publish
+├ ƒ /api/importer/publish-storage
+├ ƒ /api/projects/[slug]/graphics
+├ ƒ /api/storage/project-files
+├ ƒ /api/storage/sign-upload
+├ ƒ /counties/[slug]
+├ ○ /counties/brunswick
+├ ○ /counties/new-hanover
+├ ○ /counties/pender
+├ ○ /developers
+├ ○ /map
+├ ○ /meetings
+├ ƒ /projects/[slug]
+├ ○ /robots.txt
+├ ○ /search
+└ ○ /sitemap.xml
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+

@@ -1,0 +1,28 @@
+CFDT FOUNDATION 4.0 REPORT
+Date: 2026-07-12T15:21:49.043Z
+Backup: C:\CFDT\backups\foundation-4-2026-07-12T15-21-42-388Z
+
+Build output:
+
+> website@0.1.0 build
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.4s
+  Running TypeScript ...
+
+Failed to type check.
+
+./components/PropertyDetails.tsx:10:25
+Type error: Type '"floodZone"' is not assignable to type 'keyof Project'.
+
+  [90m 8 |[0m   {label: [32m'School District'[0m, key: [32m'schoolDistrict'[0m},
+  [90m 9 |[0m   {label: [32m'Fire District'[0m, key: [32m'fireDistrict'[0m},
+[31m[1m>[0m [90m10 |[0m   {label: [32m'Flood Zone'[0m, key: [32m'floodZone'[0m},
+  [90m   |[0m                         [31m[1m^[0m
+  [90m11 |[0m   {label: [32m'Watershed'[0m, key: [32m'watershed'[0m},
+  [90m12 |[0m ]
+  [90m13 |[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -1,0 +1,24 @@
+CFDT FOUNDATION 4.1 REBUILD REPORT
+Date: 2026-07-12T15:29:51.394Z
+Backup: C:\CFDT\backups\foundation-4-1-2026-07-12T15-29-45-063Z
+
+
+> website@0.1.0 build
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.3s
+  Running TypeScript ...
+
+Failed to type check.
+
+./components/SectionIntro.tsx:3:1
+Type error: '}' expected.
+
+  [90m1 |[0m [36mexport[0m [36mfunction[0m [33mSectionIntro[0m({text}:{text:string}){
+  [90m2 |[0m [36mreturn[0m <p className=[32m"mb-5 max-w-3xl text-slate-600"[0m>{text}</p>
+[31m[1m>[0m [90m3 |[0m
+  [90m  |[0m [31m[1m^[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -1,0 +1,1 @@
+export function DocumentCount({count}:{count:number}){return <div className="text-sm font-semibold">{count} Documents</div>}

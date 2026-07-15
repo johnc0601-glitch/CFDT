@@ -1,0 +1,1 @@
+export function GraphicCount({count}:{count:number}){return <div className="text-sm font-semibold">{count} Graphics</div>}

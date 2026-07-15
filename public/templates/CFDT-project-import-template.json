@@ -1,0 +1,28 @@
+{
+  "manifest": {
+    "schemaVersion": "1.0",
+    "generatedAt": "YYYY-MM-DD",
+    "reviewStatus": "draft"
+  },
+  "project": {
+    "name": "Development Name",
+    "slug": "development-name",
+    "county": "New Hanover County",
+    "status": "Under Review",
+    "caseNumber": "CASE-000",
+    "homesProposed": 0,
+    "siteAcres": 0,
+    "buildableAcres": 0,
+    "developer": "",
+    "engineer": "",
+    "summary": "",
+    "latestUpdateDate": "YYYY-MM-DD",
+    "latestUpdate": "",
+    "nextStep": ""
+  },
+  "timeline": [],
+  "metrics": {},
+  "documents": [],
+  "sources": [],
+  "graphicsChecklist": []
+}

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +23,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -30,5 +36,24 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+  "node_modules",
+  ".next",
+  "**/_*backup*/**",
+  "**/*_backup*/**",
+  "**/backup/**",
+  "**/backups/**",
+  "**/_repair_backup/**",
+  "**/_viewer_backup/**",
+  "**/_timeline_backup/**",
+  "**/_launch_5_step_backup/**",
+  "**/_launch_next_5_backup/**",
+  "**/_pender_explorer_backup/**",
+  "**/_brunswick_explorer_backup/**",
+  "**/_upgrade_26_30_backup/**",
+  "**/_title_plan_backup/**",
+  "**/_plat_backup/**",
+  "**/_east_village_repair_backup/**",
+  "**/_launch_next_5_backup/**"
+]
 }

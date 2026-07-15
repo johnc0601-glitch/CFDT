@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CFDT Graphics Page Browser</title>
+<style>
+:root{--blue:#244f73;--green:#6f8b63;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f4f6f3}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:24px 28px;background:#fff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;align-items:end}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--green)}h1{margin:7px 0 0;font-size:30px}.sub{margin:7px 0 0;color:var(--muted);font-size:14px}.badge{background:#f1f5f9;padding:9px 13px;border-radius:999px;font-weight:700;font-size:13px;color:#475569;white-space:nowrap}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;min-height:calc(100vh - 112px)}main{border-right:1px solid var(--line);background:#fff}.tools{position:sticky;top:0;z-index:3;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);padding:16px 22px;border-bottom:1px solid var(--line)}
+.search{width:100%;height:44px;border:1px solid var(--line);border-radius:12px;padding:0 15px;font-size:14px;outline:none}.search:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(36,79,115,.1)}
+.filters{display:flex;gap:8px;margin-top:12px;overflow:auto}.filter{border:0;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer;background:#f1f5f9;color:#475569}.filter.active{background:var(--blue);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:22px}.card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;text-align:left;padding:0;cursor:pointer;transition:.18s}.card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(15,23,42,.1)}.card.active{border-color:var(--blue);box-shadow:0 0 0 4px rgba(36,79,115,.11)}
+.thumb{aspect-ratio:4/3;background:#f1f5f9;display:flex;align-items:center;justify-content:center}.thumb img{width:100%;height:100%;object-fit:contain}.meta{padding:11px}.row{display:flex;justify-content:space-between;gap:8px}.sheet{font-size:11px;font-weight:900;letter-spacing:.08em;color:var(--green)}.page{font-size:11px;color:#94a3b8}.title{margin-top:5px;font-size:14px;font-weight:750;line-height:1.3}
+aside{padding:22px;background:#f7f8f6}.panel{position:sticky;top:22px}.box{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 3px 10px rgba(15,23,42,.04);margin-bottom:16px}.preview{aspect-ratio:4/3;background:#f1f5f9;padding:8px}.preview img{width:100%;height:100%;object-fit:contain}.content{padding:18px;border-top:1px solid var(--line)}.purpose{font-size:14px;color:var(--muted);line-height:1.55}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.chip{border:0;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:800;color:var(--blue);background:#edf2f5;cursor:pointer}.chip.active{background:var(--blue);color:#fff}.select{width:100%;height:44px;border:1px solid var(--line);border-radius:11px;padding:0 12px;background:#fff;font-weight:700}.generate{margin-top:12px;width:100%;height:46px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-weight:850;cursor:pointer}.secondary{margin-top:10px;width:100%;height:42px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--blue);font-weight:800;cursor:pointer}.projectBar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.fieldLabel{display:block;font-size:11px;font-weight:900;letter-spacing:.08em;color:#64748b;margin-bottom:6px}.textInput{width:100%;height:42px;border:1px solid var(--line);border-radius:10px;padding:0 11px;background:#fff;font-weight:700}.checklist{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}.checkRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #f1f5f9}.checkName{font-size:12px;font-weight:800}.checkState{font-size:11px;color:var(--muted)}.checkDone{color:#15803d;font-weight:900}.typeEditor{display:flex;gap:8px;margin-top:10px}.typeEditor input{flex:1;height:40px;border:1px solid var(--line);border-radius:10px;padding:0 10px}.typeEditor button{border:0;border-radius:10px;background:#e2e8f0;padding:0 12px;font-weight:900;cursor:pointer}.tray{margin-top:16px}.trayHeader{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.trayCount{font-size:11px;color:var(--muted);font-weight:800}.trayItem{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:9px;margin-top:9px}.trayThumb{width:72px;height:56px;border-radius:8px;overflow:hidden;background:#e2e8f0;border:1px solid var(--line)}.trayThumb img{width:100%;height:100%;object-fit:contain}.trayName{font-size:13px;font-weight:850;line-height:1.25}.trayMeta{font-size:11px;color:var(--muted);margin-top:3px}.trayActions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.trayBtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:800;cursor:pointer;color:#475569}.trayBtn:hover{border-color:#94a3b8}.trayBtn.danger{color:#b42318}.trayEmpty{font-size:12px;color:var(--muted);padding:12px 0}.empty{text-align:center;color:var(--muted);padding:60px}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:800px){header{align-items:flex-start;flex-direction:column}.layout{grid-template-columns:1fr}main{border-right:0}.grid{grid-template-columns:repeat(2,1fr)}aside{border-top:1px solid var(--line)}.panel{position:static}}@media(max-width:480px){.grid{grid-template-columns:1fr;padding:14px}.tools{padding:14px}aside{padding:14px}}
+</style>
+</head>
+<body>
+<header><div><div class="eyebrow">Graphics builder</div><h1>Choose a plan page</h1><p class="sub">Work by project, use only the graphic types that exist, and save a project-specific tray.</p></div><div class="badge">43 pages · lightweight previews</div></header>
+<div class="layout"><main><div class="tools"><input id="search" class="search" placeholder="Search sheet number, title, purpose, or page"/><div id="filters" class="filters"></div></div><div id="grid" class="grid"></div></main><aside><div class="panel"><div class="box"><div class="preview"><img id="previewImg"/></div><div class="content"><div class="row"><span id="previewSheet" class="sheet"></span><span id="previewPage" class="page"></span></div><h2 id="previewTitle"></h2><p id="previewPurpose" class="purpose"></p></div></div><div class="box"><div class="content">
+    <strong>Project workspace</strong>
+    <div class="projectBar">
+      <div><label class="fieldLabel">PROJECT NAME</label><input id="projectName" class="textInput" placeholder="Hilton Bluffs"/></div>
+      <div><label class="fieldLabel">PROJECT SLUG</label><input id="projectSlug" class="textInput" placeholder="hilton-bluffs"/></div>
+    </div>
+    <button id="loadProject" class="secondary">Load / switch project</button>
+    <div style="margin-top:18px"><strong>Suggested uses for this page</strong></div>
+    <div id="suggestions" class="chips"></div>
+    <label style="display:block;margin-top:16px;font-size:12px;font-weight:800;color:#475569">GRAPHIC TYPE</label>
+    <select id="graphicType" class="select"></select>
+    <div class="typeEditor"><input id="customType" placeholder="Add a custom graphic type"/><button id="addType">Add</button></div>
+    <button id="generate" class="generate">Add to project tray</button>
+    <button id="exportProject" class="secondary">Export project graphics JSON</button>
+    <div id="checklist" class="checklist"></div>
+    <div id="tray" class="tray"></div>
+    </div></div></div></aside></div>
+<script>
+const pages=Array.from({length:43},(_,i)=>{const page=i+1;if(page===1)return{page,sheet:'C-0.0',title:'Cover Sheet',purpose:'Project cover, vicinity map, sheet index, and consultant information',category:'Cover'};if(page===2)return{page,sheet:'C-2.0',title:'Overall Site Plan',purpose:'Overall subdivision layout, phases, access, and development framework',category:'Overall'};const d=page-3;return{page,sheet:`PH-${Math.floor(d/6)}.${d%6}`,title:d<36?'Detail Site Plan':'Plan Detail',purpose:d<36?'Detailed phase layout with streets, lots, open space, and infrastructure':'Supporting layout, notes, and construction details',category:d<36?'Site Plans':'Details'}}).map(p=>({...p,image:`thumbs/${String(p.page).padStart(3,'0')}.webp`}));
+
+const categories=['All','Cover','Overall','Site Plans','Details'];
+const defaultTypes=['Hero','Overall Site','Entrance','Amenities','Transportation','Open Space','Phasing'];
+let customTypes=[];
+let category='All';
+let selected=pages[1];
+let chosen='Hero';
+let project={name:'Hilton Bluffs',slug:'hilton-bluffs'};
+let generated=[];
+
+const $=id=>document.getElementById(id);
+
+function slugify(value){
+  return value.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
+function projectKey(){
+  return `cfdtGraphicsTray:${project.slug || 'unassigned'}`;
+}
+
+function typesKey(){
+  return `cfdtGraphicsTypes:${project.slug || 'unassigned'}`;
+}
+
+function loadProjectState(){
+  try{generated=JSON.parse(localStorage.getItem(projectKey())||'[]')}catch(e){generated=[]}
+  try{customTypes=JSON.parse(localStorage.getItem(typesKey())||'[]')}catch(e){customTypes=[]}
+  $('projectName').value=project.name;
+  $('projectSlug').value=project.slug;
+  renderTypes();
+  renderTray();
+  renderChecklist();
+}
+
+function saveProjectState(){
+  localStorage.setItem(projectKey(),JSON.stringify(generated));
+  localStorage.setItem(typesKey(),JSON.stringify(customTypes));
+}
+
+function allTypes(){
+  return [...new Set([...defaultTypes,...customTypes,'Custom'])];
+}
+
+function renderTypes(){
+  const select=$('graphicType');
+  select.innerHTML='';
+  allTypes().forEach(t=>{
+    const o=document.createElement('option');
+    o.value=t;
+    o.textContent=t;
+    select.appendChild(o);
+  });
+  if(!allTypes().includes(chosen)) chosen='Custom';
+  select.value=chosen;
+}
+
+function suggestions(p){
+  const text=`${p.sheet} ${p.title} ${p.purpose}`.toLowerCase();
+  const result=[];
+  if(p.category==='Overall') result.push('Hero','Overall Site','Phasing','Open Space');
+  if(p.category==='Cover') result.push('Hero');
+  if(/entrance|access|drive|road/.test(text)) result.push('Entrance','Transportation');
+  if(/amenit|club|pool|park|trail/.test(text)) result.push('Amenities','Open Space');
+  if(/wetland|conservation|buffer|open space/.test(text)) result.push('Open Space');
+  if(/phase/.test(text)) result.push('Phasing');
+  if(p.category==='Site Plans') result.push('Entrance','Amenities','Open Space','Phasing');
+  if(p.category==='Details') result.push('Transportation');
+  return [...new Set(result)].slice(0,5);
+}
+
+function renderFilters(){
+  $('filters').innerHTML='';
+  categories.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='filter'+(c===category?' active':'');
+    b.textContent=c;
+    b.onclick=()=>{category=c;renderFilters();renderGrid()};
+    $('filters').appendChild(b);
+  });
+}
+
+function renderGrid(){
+  const q=$('search').value.trim().toLowerCase();
+  const list=pages.filter(p=>(category==='All'||p.category===category)&&(!q||`${p.sheet} ${p.title} ${p.purpose} ${p.page}`.toLowerCase().includes(q)));
+  $('grid').innerHTML='';
+  if(!list.length){
+    $('grid').innerHTML='<div class="empty">No pages match that search.</div>';
+    return;
+  }
+  list.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='card'+(p.page===selected.page?' active':'');
+    b.innerHTML=`<div class="thumb"><img loading="lazy" src="${p.image}" alt="${p.title}"></div><div class="meta"><div class="row"><span class="sheet">${p.sheet}</span><span class="page">${p.page}</span></div><div class="title">${p.title}</div></div>`;
+    b.onclick=()=>{selected=p;renderGrid();renderDetail()};
+    $('grid').appendChild(b);
+  });
+}
+
+function renderDetail(){
+  $('previewImg').src=selected.image;
+  $('previewSheet').textContent=selected.sheet;
+  $('previewPage').textContent='Page '+selected.page;
+  $('previewTitle').textContent=selected.title;
+  $('previewPurpose').textContent=selected.purpose;
+  $('suggestions').innerHTML='';
+  suggestions(selected).forEach(t=>{
+    const b=document.createElement('button');
+    b.className='chip'+(chosen===t?' active':'');
+    b.textContent=t;
+    b.onclick=()=>{chosen=t;renderTypes();renderDetail()};
+    $('suggestions').appendChild(b);
+  });
+  renderTypes();
+  renderTray();
+  renderChecklist();
+}
+
+function renameGraphic(id){
+  const g=generated.find(x=>x.id===id);
+  if(!g)return;
+  const name=prompt('Rename graphic',g.name);
+  if(name&&name.trim()){
+    g.name=name.trim();
+    saveProjectState();
+    renderTray();
+  }
+}
+
+function deleteGraphic(id){
+  generated=generated.filter(x=>x.id!==id);
+  saveProjectState();
+  renderTray();
+  renderChecklist();
+}
+
+function regenerateGraphic(id){
+  const g=generated.find(x=>x.id===id);
+  if(!g)return;
+  g.version=(g.version||1)+1;
+  g.updated=Date.now();
+  saveProjectState();
+  renderTray();
+}
+
+function selectTraySource(id){
+  const g=generated.find(x=>x.id===id);
+  const p=pages.find(x=>x.page===g?.page);
+  if(p){
+    selected=p;
+    chosen=g.type;
+    renderGrid();
+    renderDetail();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+function renderChecklist(){
+  const activeTypes=[...new Set(generated.map(g=>g.type))];
+  const available=[...new Set([...suggestions(selected),...activeTypes,...customTypes])].filter(t=>t!=='Custom');
+  if(!available.length){
+    $('checklist').innerHTML='';
+    return;
+  }
+  $('checklist').innerHTML='<div class="trayHeader"><strong style="font-size:13px">Project graphic types</strong><span class="trayCount">Only types used or suggested</span></div>'+
+  available.map(type=>{
+    const count=generated.filter(g=>g.type===type).length;
+    return `<div class="checkRow"><span class="checkName">${type}</span><span class="${count?'checkDone':'checkState'}">${count?`✓ ${count} saved`:'Optional'}</span></div>`;
+  }).join('');
+}
+
+function renderTray(){
+  if(!generated.length){
+    $('tray').innerHTML='<div class="trayEmpty">No graphics saved for this project yet.</div>';
+    return;
+  }
+  $('tray').innerHTML=`<div class="trayHeader"><strong style="font-size:13px">${project.name} graphics tray</strong><span class="trayCount">${generated.length} item${generated.length===1?'':'s'}</span></div>`+
+  generated.map(g=>`<div class="trayItem"><button class="trayThumb" onclick="selectTraySource('${g.id}')" title="Open source page"><img src="${g.image}" alt="${g.name}"></button><div><div class="trayName">${g.name}</div><div class="trayMeta">${g.type} · ${g.sheet} · Page ${g.page}${g.version>1?` · v${g.version}`:''}</div><div class="trayActions"><button class="trayBtn" onclick="renameGraphic('${g.id}')">Rename</button><button class="trayBtn" onclick="regenerateGraphic('${g.id}')">Regenerate</button><button class="trayBtn danger" onclick="deleteGraphic('${g.id}')">Delete</button></div></div></div>`).join('');
+}
+
+$('search').addEventListener('input',renderGrid);
+
+$('graphicType').addEventListener('change',e=>{
+  chosen=e.target.value;
+  renderDetail();
+});
+
+$('projectName').addEventListener('input',e=>{
+  if(!$('projectSlug').dataset.edited){
+    $('projectSlug').value=slugify(e.target.value);
+  }
+});
+
+$('projectSlug').addEventListener('input',e=>{
+  e.target.dataset.edited='1';
+});
+
+$('loadProject').onclick=()=>{
+  const name=$('projectName').value.trim();
+  const slug=slugify($('projectSlug').value || name);
+  if(!name||!slug){
+    alert('Enter a project name first.');
+    return;
+  }
+  project={name,slug};
+  $('projectSlug').dataset.edited='';
+  loadProjectState();
+};
+
+$('addType').onclick=()=>{
+  const value=$('customType').value.trim();
+  if(!value)return;
+  if(!customTypes.includes(value)) customTypes.push(value);
+  chosen=value;
+  $('customType').value='';
+  saveProjectState();
+  renderTypes();
+  renderChecklist();
+};
+
+$('generate').onclick=()=>{
+  const id='g'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  generated.unshift({
+    id,
+    projectName:project.name,
+    projectSlug:project.slug,
+    name:`${chosen} – ${selected.sheet}`,
+    type:chosen,
+    sheet:selected.sheet,
+    page:selected.page,
+    sourceTitle:selected.title,
+    image:selected.image,
+    version:1,
+    status:'draft',
+    updated:Date.now()
+  });
+  saveProjectState();
+  renderTray();
+  renderChecklist();
+};
+
+$('exportProject').onclick=()=>{
+  const data={
+    schemaVersion:'1.0',
+    project,
+    exportedAt:new Date().toISOString(),
+    graphics:generated
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`${project.slug}-graphics.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+loadProjectState();
+renderFilters();
+renderGrid();
+renderDetail();
+</script>
+</body></html>

@@ -1,0 +1,254 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(290px, 0.82fr) minmax(0, 2.18fr);
+  min-height: 680px;
+  overflow: hidden;
+  border: 1px solid #d8dee2;
+  border-radius: 24px;
+  background: #f7f8f6;
+  box-shadow: 0 24px 70px rgba(10, 37, 53, 0.12);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(2rem, 4vw, 4.5rem);
+  background:
+    radial-gradient(circle at 0 0, rgba(67, 151, 178, 0.22), transparent 38%),
+    linear-gradient(160deg, #082b43 0%, #0d4564 100%);
+  color: white;
+}
+
+.eyebrow {
+  margin-bottom: 1rem;
+  color: #8fd1a9;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.summary h1 {
+  max-width: 6ch;
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(3.2rem, 6vw, 6.25rem);
+  font-weight: 500;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+}
+
+.location {
+  margin: 1.25rem 0 0;
+  color: #d9e6eb;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.rule {
+  width: 100%;
+  height: 1px;
+  margin: 2rem 0;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.stats {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.stat {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 2px solid #4ab2d9;
+  border-radius: 999px;
+}
+
+.icon svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.featured .icon {
+  border-color: #73bd6b;
+  color: #8bd57f;
+}
+
+.statText {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.statText strong {
+  color: #63b9df;
+  font-size: clamp(1.85rem, 3vw, 2.7rem);
+  line-height: 1;
+}
+
+.featured .statText strong {
+  color: #7bc36f;
+}
+
+.statText span {
+  color: #e8f0f3;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 2rem;
+  color: #d7e5ea;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.statusDot {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #85cc73;
+  box-shadow: 0 0 0 5px rgba(133, 204, 115, 0.14);
+}
+
+.plan {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-width: 0;
+  padding: clamp(1rem, 2vw, 1.6rem);
+}
+
+.planHeader,
+.planFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.planHeader {
+  padding: 0.35rem 0 1rem;
+}
+
+.planHeader > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.planHeader span {
+  color: #65808d;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.planHeader strong {
+  color: #102f43;
+  font-size: clamp(1.1rem, 2vw, 1.55rem);
+}
+
+.planLink {
+  color: #126b4b;
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.planLink:hover {
+  text-decoration: underline;
+}
+
+.imageFrame {
+  position: relative;
+  min-height: 520px;
+  overflow: hidden;
+  border: 4px solid #4f9b43;
+  border-radius: 16px;
+  background: white;
+}
+
+.image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.planFooter {
+  padding-top: 0.9rem;
+  color: #63727a;
+  font-size: 0.73rem;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .summary h1 {
+    max-width: none;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1rem;
+  }
+
+  .status {
+    margin-top: 1.5rem;
+  }
+
+  .imageFrame {
+    min-height: 440px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    border-radius: 16px;
+  }
+
+  .summary {
+    padding: 1.5rem;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .plan {
+    padding: 0.8rem;
+  }
+
+  .planHeader,
+  .planFooter {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .imageFrame {
+    min-height: 340px;
+  }
+}

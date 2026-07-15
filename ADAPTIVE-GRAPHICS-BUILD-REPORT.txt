@@ -1,0 +1,43 @@
+CFDT ADAPTIVE GRAPHICS BUILDER
+Date: 2026-07-13T00:03:22.285Z
+Backup: C:\CFDT\backups\adaptive-graphics-2026-07-13T00-03-13-849Z
+
+
+> website@0.1.0 build
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1993ms
+  Running TypeScript ...
+  Finished TypeScript in 2.6s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/14) ...
+  Generating static pages using 11 workers (3/14) 
+  Generating static pages using 11 workers (6/14) 
+  Generating static pages using 11 workers (10/14) 
+✓ Generating static pages using 11 workers (14/14) in 885ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ƒ /counties/[slug]
+├ ○ /counties/brunswick
+├ ○ /counties/new-hanover
+├ ○ /counties/pender
+├ ○ /developers
+├ ○ /map
+├ ○ /meetings
+├ ƒ /projects/[slug]
+├ ○ /robots.txt
+├ ○ /search
+└ ○ /sitemap.xml
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+

@@ -1,0 +1,46 @@
+CFDT AI PROJECT IMPORTER 3.0
+Backup: C:\CFDT\backups\ai-project-importer-3-2026-07-13T15-48-41-150Z
+
+
+up to date, audited 390 packages in 2s
+
+150 packages are looking for funding
+  run `npm fund` for details
+
+2 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+npm warn allow-scripts 2 packages have install scripts not yet covered by allowScripts:
+npm warn allow-scripts   sharp@0.34.5 (install: (install scripts present))
+npm warn allow-scripts   unrs-resolver@1.12.2 (install: (install scripts present))
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+
+
+> website@0.1.0 build
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.8s
+  Running TypeScript ...
+
+Failed to type check.
+
+./app/api/importer/extract-storage/route.ts:263:7
+Type error: Object literal may only specify known properties, and 'status' does not exist in type 'never[]'.
+
+  [90m261 |[0m   [36mtry[0m {
+  [90m262 |[0m     [36mawait[0m supabase.[36mfrom[0m([32m'cfdt_import_jobs'[0m).insert({
+[31m[1m>[0m [90m263 |[0m       status: [32m'review'[0m,
+  [90m    |[0m       [31m[1m^[0m
+  [90m264 |[0m       source_files: [projectSlug],
+  [90m265 |[0m       extracted_package: result,
+  [90m266 |[0m     })
+Next.js build worker exited with code: 1 and signal: null

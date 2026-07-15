@@ -1,0 +1,46 @@
+CFDT VISUAL SHEET PICKER 1.0
+Backup: C:\CFDT\backups\visual-sheet-picker-2026-07-14T12-44-50-991Z
+
+
+added 13 packages, and audited 403 packages in 4s
+
+152 packages are looking for funding
+  run `npm fund` for details
+
+2 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+npm warn allow-scripts 2 packages have install scripts not yet covered by allowScripts:
+npm warn allow-scripts   sharp@0.34.5 (install: (install scripts present))
+npm warn allow-scripts   unrs-resolver@1.12.2 (install: (install scripts present))
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+
+
+> website@0.1.0 build
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.0s
+  Running TypeScript ...
+
+Failed to type check.
+
+./components/workspace/VisualSheetPicker.tsx:212:33
+Type error: Property 'createElement' does not exist on type 'PDFDocumentProxy'.
+
+  [90m210 |[0m         [36mconst[0m scale = [33mMath[0m.min([35m0.45[0m, [35m260[0m / baseViewport.width)
+  [90m211 |[0m         [36mconst[0m viewport = page.getViewport({scale})
+[31m[1m>[0m [90m212 |[0m         [36mconst[0m canvas = document.createElement([32m'canvas'[0m)
+  [90m    |[0m                                 [31m[1m^[0m
+  [90m213 |[0m         canvas.width = [33mMath[0m.ceil(viewport.width)
+  [90m214 |[0m         canvas.height = [33mMath[0m.ceil(viewport.height)
+  [90m215 |[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -1,0 +1,1 @@
+export function StatusBadge({status}:{status?:string}){return <span className="rounded-full bg-[#0b5a35] px-3 py-1 text-xs font-bold text-white">{status||'Unknown'}</span>}

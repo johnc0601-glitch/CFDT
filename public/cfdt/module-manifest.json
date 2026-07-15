@@ -1,0 +1,175 @@
+{
+  "platformVersion": "4.0",
+  "manifestVersion": "1.0",
+  "updatedAt": "2026-07-13",
+  "modules": [
+    {
+      "id": "core",
+      "name": "CFDT Core",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Foundation",
+      "description": "Shared routing, types, queries, layouts, and utilities.",
+      "route": null
+    },
+    {
+      "id": "project-dashboard",
+      "name": "Project Dashboard",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Public Site",
+      "description": "Project summary, verified timeline, graphics viewer, and updates feed.",
+      "route": "/projects/hilton-bluffs"
+    },
+    {
+      "id": "county-explorer",
+      "name": "County Explorer",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Public Site",
+      "description": "New Hanover, Pender, and Brunswick county project pages.",
+      "route": "/counties/pender"
+    },
+    {
+      "id": "graphics-builder",
+      "name": "Graphics Builder",
+      "version": "2.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Project-specific graphics trays, page suggestions, custom types, and export.",
+      "route": "/admin/graphics"
+    },
+    {
+      "id": "project-builder",
+      "name": "Project Builder",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Standardized CFDT JSON review and project intake.",
+      "route": "/admin"
+    },
+    {
+      "id": "module-manager",
+      "name": "Module Manager",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Installed module inventory, compatibility notes, and change history.",
+      "route": "/admin/modules"
+    },
+    {
+      "id": "documents-manager",
+      "name": "Documents Manager",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Documents Manager",
+      "route": "/admin/documents"
+    },
+    {
+      "id": "timeline-updates-manager",
+      "name": "Timeline & Updates Manager",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Timeline & Updates Manager",
+      "route": "/admin/timeline-updates"
+    },
+    {
+      "id": "county-data-manager",
+      "name": "County Data Manager",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "County Data Manager",
+      "route": "/admin/county-data"
+    },
+    {
+      "id": "publish-manager",
+      "name": "Publish Manager",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Publish Manager",
+      "route": "/admin/publish"
+    },
+    {
+      "id": "traffic-analysis",
+      "name": "Traffic Analysis",
+      "version": "1.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Traffic Analysis",
+      "route": "/admin/traffic"
+    },
+    {
+      "id": "ai-project-importer",
+      "name": "AI Project Importer",
+      "version": "3.2.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Creates a ChatGPT extraction prompt, imports returned JSON, reviews, and publishes.",
+      "route": "/admin/importer"
+    },
+    {
+      "id": "project-intake-wizard",
+      "name": "Project Intake Wizard",
+      "version": "2.0.0",
+      "status": "installed",
+      "area": "Workspace",
+      "description": "Prepares, splits, organizes, and uploads large project packages.",
+      "route": "/admin/intake-wizard"
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-07-13",
+      "version": "3.2.0",
+      "module": "ai-project-importer",
+      "action": "upgraded",
+      "note": "Added no-API ChatGPT workflow with prompt generation and JSON import."
+    },
+    {
+      "date": "2026-07-13",
+      "version": "3.1.0",
+      "module": "ai-project-importer",
+      "action": "upgraded",
+      "note": "Removed cfdt_import_jobs dependency and kept review state in browser memory."
+    },
+    {
+      "date": "2026-07-13",
+      "version": "2.0.0",
+      "module": "project-intake-wizard",
+      "action": "installed",
+      "note": "Replaced the standalone splitter with one-step intake and upload."
+    },
+    {
+      "date": "2026-07-12",
+      "version": "2.0.0",
+      "module": "ai-project-importer",
+      "action": "upgraded",
+      "note": "Connected OpenAI, Supabase, and Sanity."
+    },
+    {
+      "date": "2026-07-12",
+      "version": "1.0.0",
+      "module": "ai-project-importer",
+      "action": "installed",
+      "note": "Added project package preparation workflow."
+    },
+    {
+      "date": "2026-07-12",
+      "version": "1.0.0",
+      "module": "workspace-suite",
+      "action": "installed",
+      "note": "Installed Documents, Timeline & Updates, County Data, Publish, and Traffic modules."
+    },
+    {
+      "date": "2026-07-12",
+      "version": "1.0.0",
+      "module": "module-manager",
+      "action": "installed",
+      "note": "Created the first CFDT module manifest and management screen."
+    }
+  ]
+}
