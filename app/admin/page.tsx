@@ -21,29 +21,22 @@ export default async function AdminPage() {
     <main className="min-h-screen bg-[#f3f5f2] text-[#142033]">
       <Header />
       <section className="mx-auto max-w-6xl space-y-10 px-6 py-10">
-        <PageHero eyebrow="Workspace" title="CFDT Workspace" description="Maintain development records, review intake drafts, and check missing content." />
+        <PageHero eyebrow="Workspace" title="CFDT Workspace" description="Import official records, review AI findings, and maintain published development records." />
         <DashboardSummary projects={projects} />
 
-        <section className="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
+        <section className="rounded-2xl bg-[#173f5f] p-8 text-white shadow-sm">
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#6f8b63]">One-step Intake</p>
-              <h2 className="mt-2 text-2xl font-semibold">Project Intake Wizard</h2>
-              <p className="mt-3 max-w-2xl text-slate-600">Split oversized PDFs, organize files, and upload the whole project package in one workflow.</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-200">Start Here</p>
+              <h2 className="mt-2 text-3xl font-semibold">Import Development</h2>
+              <p className="mt-3 max-w-2xl text-blue-50">Drop official planning PDFs. AI prepares the project facts, summary, timeline, and documents for your review.</p>
             </div>
-            <Link href="/admin/intake-wizard" className="inline-flex rounded-xl bg-[#244f73] px-5 py-3 text-sm font-bold text-white">Open Intake Wizard →</Link>
-          </div>
-        </section>
-
-        <section className="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-            <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#6f8b63]">Phase 2</p><h2 className="mt-2 text-2xl font-semibold">AI Project Importer</h2><p className="mt-3 max-w-2xl text-slate-600">Prepare standardized project packages from county records.</p></div>
-            <Link href="/admin/importer" className="inline-flex rounded-xl bg-[#244f73] px-5 py-3 text-sm font-bold text-white">Open Importer →</Link>
+            <Link href="/admin/importer" className="inline-flex w-fit rounded-xl bg-white px-6 py-3 text-sm font-bold text-[#173f5f]">Import Documents →</Link>
           </div>
         </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <Link href="/admin/graphics" className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200"><h2 className="text-xl font-bold">Graphics Import</h2><p className="mt-2 text-sm leading-6 text-slate-600">Review AI-suggested plan sheets and publish approved graphics.</p><span className="mt-4 inline-flex text-sm font-bold text-[#244f73]">Open module →</span></Link>
+          <Link href="/admin/graphics" className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200"><h2 className="text-xl font-bold">Graphics Import</h2><p className="mt-2 text-sm leading-6 text-slate-600">Review plan-sheet suggestions and publish selected graphics.</p><span className="mt-4 inline-flex text-sm font-bold text-[#244f73]">Open module →</span></Link>
           <Link href="/admin/documents" className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200"><h2 className="text-xl font-bold">Documents Manager</h2><p className="mt-2 text-sm leading-6 text-slate-600">Official links and supporting records.</p><span className="mt-4 inline-flex text-sm font-bold text-[#244f73]">Open module →</span></Link>
           <Link href="/admin/timeline-updates" className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200"><h2 className="text-xl font-bold">Timeline & Updates</h2><p className="mt-2 text-sm leading-6 text-slate-600">Verified milestones and public updates.</p><span className="mt-4 inline-flex text-sm font-bold text-[#244f73]">Open module →</span></Link>
           <Link href="/admin/county-data" className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200"><h2 className="text-xl font-bold">County Data</h2><p className="mt-2 text-sm leading-6 text-slate-600">County totals and growth metrics.</p><span className="mt-4 inline-flex text-sm font-bold text-[#244f73]">Open module →</span></Link>
