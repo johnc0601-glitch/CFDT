@@ -233,6 +233,23 @@ export function PublishedProjectEditor({slug}: {slug: string}) {
       </section>
 
       <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <h3 className="text-xl font-bold">Mapping</h3>
+        <p className="mt-2 text-sm text-slate-600">
+          Use latitude and longitude to move the project marker. Updating parcel IDs may refresh county GIS details when the record is saved.
+        </p>
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <NumberField label="Latitude" value={project.latitude} onChange={(value) => update('latitude', value)} step="any" />
+          <NumberField label="Longitude" value={project.longitude} onChange={(value) => update('longitude', value)} step="any" />
+          <NumberField label="Official parcel acres" value={project.parcelAcres} onChange={(value) => update('parcelAcres', value)} step="any" />
+          <TextField label="Municipality / jurisdiction" value={project.municipalityName} onChange={(value) => update('municipalityName', value)} />
+          <TextField label="Current zoning" value={project.currentZoning?.join(', ')} onChange={(value) => update('currentZoning', splitList(value))} />
+          <TextField label="Flood zones" value={project.floodZones?.join(', ')} onChange={(value) => update('floodZones', splitList(value))} />
+          <TextField label="Water provider" value={project.waterProvider} onChange={(value) => update('waterProvider', value)} />
+          <TextField label="Sewer provider" value={project.sewerProvider} onChange={(value) => update('sewerProvider', value)} />
+        </div>
+      </section>
+
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <h3 className="text-xl font-bold">Public text</h3>
         <div className="mt-5 space-y-4">
           <TextArea label="Summary" value={project.summary} onChange={(value) => update('summary', value)} />
@@ -323,10 +340,12 @@ function NumberField({
   label,
   value,
   onChange,
+  step = '1',
 }: {
   label: string
   value?: number
   onChange: (value: number | undefined) => void
+  step?: string
 }) {
   return (
     <label className="block">
@@ -335,6 +354,7 @@ function NumberField({
       </span>
       <input
         type="number"
+        step={step}
         value={value || ''}
         onChange={(event) =>
           onChange(event.target.value ? Number(event.target.value) : undefined)
@@ -343,6 +363,13 @@ function NumberField({
       />
     </label>
   )
+}
+
+function splitList(value: string) {
+  return value
+    .split(/[,;\n]+/)
+    .map((item) => item.trim())
+    .filter(Boolean)
 }
 
 function TextArea({
