@@ -1,0 +1,264 @@
+{
+  "packageVersion": "1.0",
+  "project": {
+    "name": "East Village / Hawksbill Cove",
+    "slug": "east-village-hawksbill-cove",
+    "county": "Pender",
+    "caseNumber": "SUBMAJ 2025-141",
+    "status": "Pending",
+    "projectType": "Major Subdivision",
+    "summary": "East Village / Hawksbill Cove is a proposed major residential subdivision in Hampstead near Highway 17 and Country Club Road. The submitted preliminary plat package describes 485 single-family lots on about 147 acres within a larger 376-acre planned development area. The plans show phased development, private roads, stormwater ponds, wetlands, floodplain areas, and utility infrastructure. The application is associated with Ryan Homes and property owned by Hampstead Properties LLC.",
+    "locationDescription": "Off Country Club Road between Avila Avenue and Velinza Plantation Road, near Highway 17 in Hampstead.",
+    "homesProposed": 485,
+    "residentialUnits": 485,
+    "siteAcres": 147,
+    "acreage": 147,
+    "buildableAcres": 0,
+    "commercialSquareFeet": 0,
+    "developer": "Ryan Homes",
+    "applicant": "Ryan Homes",
+    "owner": "Hampstead Properties LLC",
+    "engineer": "WithersRavenel",
+    "zoning": "Planned Development (PD)",
+    "latestUpdateDate": "2025-10-03",
+    "latestUpdate": "Preliminary construction plan set dated October 3, 2025.",
+    "nextStep": "County technical review and public review process to be verified.",
+    "parcels": [
+      "4203-74-3682-0000",
+      "4203-64-1002-0000",
+      "4203-45-2426-0000",
+      "4203-54-0458-0000",
+      "4203-43-7857-0000",
+      "4203-64-4531-0000",
+      "4203-53-9769-0000",
+      "4203-45-4049-0000",
+      "4203-53-8553-0000"
+    ],
+    "roads": [
+      "Country Club Road",
+      "Avila Avenue",
+      "Velinza Plantation Road",
+      "Bayview Drive",
+      "Deepwater Drive",
+      "Leatherback Lane",
+      "Lower Mast Lane",
+      "Upper Mast Lane",
+      "Fiddler Drive",
+      "Riddley Drive",
+      "Flying Cloud Drive",
+      "Cobia Drive",
+      "Billfish Drive"
+    ]
+  },
+  "timeline": [
+    {
+      "date": "2025-10-01",
+      "title": "Preliminary plat application signed",
+      "label": "Application Signed",
+      "stageStatus": "complete",
+      "status": "complete",
+      "description": "The subdivision application forms in the county package show applicant and owner signatures dated October 1, 2025.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 3
+    },
+    {
+      "date": "2025-10-03",
+      "title": "Preliminary plan set prepared",
+      "label": "Plan Set Dated",
+      "stageStatus": "complete",
+      "status": "complete",
+      "description": "The Hawksbill Cove East Village construction plan cover sheet lists an initial plan date of October 3, 2025.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 6
+    },
+    {
+      "date": "",
+      "title": "County technical review",
+      "label": "Technical Review",
+      "stageStatus": "current",
+      "status": "current",
+      "description": "The application is a preliminary plat for a major subdivision. The exact Technical Review Committee date and review comments should be verified from county records before publication.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 1
+    }
+  ],
+  "traffic": {
+    "trafficStudyProvided": false,
+    "trafficCounts": "",
+    "roadImprovements": "",
+    "notes": "The extracted pages reviewed here identify the location and road network, but no traffic impact study totals or required improvements were verified in the package text."
+  },
+  "documents": [
+    {
+      "title": "SUBMAJ 2025-141 Website Package",
+      "documentType": "Preliminary Plat Package",
+      "sourceUrl": "https://www.pendercountync.gov/DocumentCenter/View/4858/SUBMAJ-2025-141-East-Village-Hawksbill-Cove",
+      "storagePath": "",
+      "date": "2025-10-03",
+      "notes": "Official Pender County website package uploaded locally as SUBMAJ 2025-141 Website Package (1).pdf."
+    }
+  ],
+  "graphicsSuggestions": [
+    {
+      "label": "Overview",
+      "category": "Overview",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "pageNumber": 6,
+      "confidence": "high",
+      "reason": "Cover sheet includes project data, vicinity/overall context, parcel data, and sheet index."
+    },
+    {
+      "label": "Construction Phasing",
+      "category": "Construction Phasing",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "pageNumber": 9,
+      "confidence": "high",
+      "reason": "Phasing plan identifies East Village phases A, B, and C and shows the broader Hawksbill Cove context."
+    },
+    {
+      "label": "Neighborhood Layout",
+      "category": "Neighborhood Layout",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "pageNumber": 10,
+      "confidence": "medium",
+      "reason": "Site plan pages begin showing individual lots, roads, limits of disturbance, wetlands, and flood limits. User should choose the clearest page in Graphics."
+    },
+    {
+      "label": "Environmental Features",
+      "category": "Environmental Features",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "pageNumber": 9,
+      "confidence": "high",
+      "reason": "The phasing/overall plan labels existing wetlands, flood limits, normal high water line, 75-foot AEC, and limit of moderate wave action."
+    },
+    {
+      "label": "Stormwater",
+      "category": "Stormwater",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "pageNumber": 6,
+      "confidence": "medium",
+      "reason": "The cover sheet index lists storm drainage, grading, and SCM plan/detail sheets. User should select the best stormwater sheet in Graphics."
+    },
+    {
+      "label": "Utilities",
+      "category": "Utilities",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "pageNumber": 6,
+      "confidence": "medium",
+      "reason": "The cover sheet index lists multiple utility plan sheets and force main plan/profile sheets."
+    }
+  ],
+  "communityConcerns": [
+    {
+      "topic": "Traffic and access",
+      "summary": "The project is located near Highway 17 and Country Club Road, with access context involving Country Club Road, Avila Avenue, and Velinza Plantation Road. Traffic impacts and required road improvements should be verified from county or NCDOT records.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 1
+    },
+    {
+      "topic": "Wetlands and floodplain",
+      "summary": "Plan notes and sheets identify existing wetlands, FEMA floodplain, normal high water line, 75-foot AEC, and limit of moderate wave action within or near the project area.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 7
+    },
+    {
+      "topic": "Stormwater",
+      "summary": "The plan set includes storm drainage, grading, and SCM sheets. Specific stormwater design details should be reviewed from those sheets before public summary text is finalized.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 6
+    },
+    {
+      "topic": "Scale of growth",
+      "summary": "The preliminary plat package describes 485 single-family lots on approximately 147 acres within a larger planned development area.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 1
+    }
+  ],
+  "sourceReferences": [
+    {
+      "field": "caseNumber",
+      "value": "SUBMAJ 2025-141",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "homesProposed",
+      "value": "485 single-family lots",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "siteAcres",
+      "value": "Approximately 147 acres",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "zoning",
+      "value": "Planned Development (PD)",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "largerProjectArea",
+      "value": "Approximately 376 acres",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "eastVillageArea",
+      "value": "Approximately 164.47 acres shown on cover sheet",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 6
+    },
+    {
+      "title": "Pender County Unified Development Ordinance",
+      "url": "https://pendercountync.gov/517/Unified-Development-Ordinance-UDO",
+      "sourceDocument": "Pender County Planning & Community Development",
+      "notes": "County zoning, subdivision, and land-use rules used to review development applications."
+    }
+  ],
+  "reviewFlags": [
+    {
+      "field": "siteAcres",
+      "severity": "review",
+      "message": "Application page says approximately 147 acres, while the cover sheet lists East Village area as approximately 164.47 acres. Keep 147 acres as the public preliminary plat area unless county staff clarifies otherwise.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": 6
+    },
+    {
+      "field": "status",
+      "severity": "review",
+      "message": "Status is set to Pending based on the project context. Verify current status from the Pender County Major Subdivisions list before publishing.",
+      "sourceDocument": "Pender County Major Subdivisions list",
+      "sourcePage": null
+    },
+    {
+      "field": "traffic",
+      "severity": "missing",
+      "message": "No verified traffic impact totals or required road improvements were extracted from the reviewed pages.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": null
+    },
+    {
+      "field": "timeline",
+      "severity": "missing",
+      "message": "TRC meeting date, staff comments, Planning Board date, and final decision milestones are not verified in this package.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": null
+    },
+    {
+      "field": "graphics",
+      "severity": "review",
+      "message": "Graphics suggestions identify likely pages, but the user should choose final sheets in the Graphics workflow.",
+      "sourceDocument": "SUBMAJ 2025-141 Website Package",
+      "sourcePage": null
+    }
+  ],
+  "reviewNotes": [
+    "Verify current project status from Pender County before publication.",
+    "Resolve acreage discrepancy: application says approximately 147 acres; cover sheet lists East Village area as approximately 164.47 acres.",
+    "Traffic impact details were not verified from the extracted text.",
+    "Choose final graphics manually in the Graphics workflow."
+  ]
+}

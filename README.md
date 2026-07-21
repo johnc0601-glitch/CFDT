@@ -2,6 +2,19 @@
 
 Standalone Next.js project page based on Pender County case **SUBMAJ 2025-141**.
 
+## Admin access
+
+Public pages are open, but the workspace and write-capable APIs are password protected.
+
+Set these environment variables before deploying:
+
+```bash
+CFDT_ADMIN_USER=admin
+CFDT_ADMIN_PASSWORD=use-a-long-private-password
+```
+
+If `CFDT_ADMIN_PASSWORD` is missing in production, admin access is disabled.
+
 ## Run locally
 
 ```bash

@@ -1,4 +1,5 @@
 import {NextResponse} from 'next/server'
+import {revalidatePath} from 'next/cache'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -24,6 +25,63 @@ function getConfig() {
   }
 
   return {projectId, dataset, token}
+}
+
+async function sanityFetch(
+  path: string,
+  init?: RequestInit,
+) {
+  const {projectId, dataset, token} = getConfig()
+
+  if (!token) {
+    throw new Error('Sanity API token is missing.')
+  }
+
+  const response = await fetch(
+    `https://${projectId}.api.sanity.io${path.replace(
+      '{dataset}',
+      encodeURIComponent(dataset),
+    )}`,
+    {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        ...(init?.headers || {}),
+      },
+      cache: 'no-store',
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error(await response.text())
+  }
+
+  return response.json()
+}
+
+function text(value: unknown) {
+  return typeof value === 'string' ? value.trim() : ''
+}
+
+async function verifyGraphic(slug: string, graphicId: string) {
+  const query = `*[
+    _type == "projectGraphic" &&
+    _id == $graphicId &&
+    project->slug.current == $slug
+  ][0]{_id}`
+  const search = new URLSearchParams({
+    query,
+    '$slug': JSON.stringify(slug),
+    '$graphicId': JSON.stringify(graphicId),
+  })
+  const result = await sanityFetch(
+    `/v2026-07-08/data/query/{dataset}?${search.toString()}`,
+  )
+
+  if (!result?.result?._id) {
+    throw new Error('Graphic was not found for this project.')
+  }
 }
 
 export async function GET(
@@ -144,6 +202,95 @@ export async function GET(
             ? error.message
             : 'Could not load project graphics.',
       },
+      {status: 500},
+    )
+  }
+}
+
+export async function PATCH(
+  request: Request,
+  {params}: Props,
+) {
+  try {
+    const {slug} = await params
+    const body = await request.json()
+    const graphicId = text(body.graphicId)
+    const title = text(body.title)
+
+    if (!graphicId) {
+      return NextResponse.json({error: 'Graphic ID is required.'}, {status: 400})
+    }
+
+    if (!title) {
+      return NextResponse.json({error: 'Graphic title is required.'}, {status: 400})
+    }
+
+    await verifyGraphic(slug, graphicId)
+
+    const result = await sanityFetch(
+      '/v2026-07-08/data/mutate/{dataset}?returnDocuments=true&visibility=sync',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          mutations: [
+            {
+              patch: {
+                id: graphicId,
+                set: {
+                  title,
+                  'image.alt': title,
+                },
+              },
+            },
+          ],
+        }),
+      },
+    )
+
+    revalidatePath(`/projects/${slug}`)
+    revalidatePath('/projects/[slug]', 'page')
+
+    return NextResponse.json({ok: true, result})
+  } catch (error) {
+    return NextResponse.json(
+      {error: error instanceof Error ? error.message : 'Could not rename graphic.'},
+      {status: 500},
+    )
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  {params}: Props,
+) {
+  try {
+    const {slug} = await params
+    const body = await request.json()
+    const graphicId = text(body.graphicId)
+
+    if (!graphicId) {
+      return NextResponse.json({error: 'Graphic ID is required.'}, {status: 400})
+    }
+
+    await verifyGraphic(slug, graphicId)
+
+    const result = await sanityFetch(
+      '/v2026-07-08/data/mutate/{dataset}?returnIds=true&visibility=sync',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          mutations: [{delete: {id: graphicId}}],
+        }),
+      },
+    )
+
+    revalidatePath(`/projects/${slug}`)
+    revalidatePath('/projects/[slug]', 'page')
+
+    return NextResponse.json({ok: true, result})
+  } catch (error) {
+    return NextResponse.json(
+      {error: error instanceof Error ? error.message : 'Could not delete graphic.'},
       {status: 500},
     )
   }

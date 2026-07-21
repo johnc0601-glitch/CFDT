@@ -1,5 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
+import {enrichProjectWithCountyGis} from '@/lib/gis'
 
 export const runtime = 'nodejs'
 export const maxDuration = 300
@@ -82,6 +83,7 @@ const factsSchema = {
     'projectName',
     'county',
     'caseNumber',
+    'parcelIds',
     'status',
     'homesProposed',
     'siteAcres',
@@ -98,6 +100,7 @@ const factsSchema = {
     projectName: {type: 'string'},
     county: {type: 'string'},
     caseNumber: {type: 'string'},
+    parcelIds: {type: 'array', items: {type: 'string'}},
     status: {type: 'string'},
     homesProposed: {type: 'number'},
     siteAcres: {type: 'number'},
@@ -133,6 +136,7 @@ const finalProjectSchema = {
     'slug',
     'county',
     'caseNumber',
+    'parcelIds',
     'status',
     'homesProposed',
     'siteAcres',
@@ -150,6 +154,7 @@ const finalProjectSchema = {
     slug: {type: 'string'},
     county: {type: 'string'},
     caseNumber: {type: 'string'},
+    parcelIds: {type: 'array', items: {type: 'string'}},
     status: {type: 'string'},
     homesProposed: {type: 'number'},
     siteAcres: {type: 'number'},
@@ -262,6 +267,7 @@ Rules:
 - Do not invent values.
 - Use empty strings or 0 for unsupported fields.
 - Use YYYY-MM-DD when an exact date is present.
+- Extract every explicitly printed parcel ID or PIN into parcelIds without changing its spelling.
 - Timeline events must be directly supported by this document.
 - Include a future event only when an official source explicitly states it is required or expected.
 - Preserve conflicts and uncertainty in reviewNotes.
@@ -416,6 +422,7 @@ Rules:
 - Mark only the most recent verified completed milestone as current.
 - Keep unsupported numeric fields at 0.
 - Keep unsupported text fields empty.
+- Preserve all supported parcel IDs in project.parcelIds and use an empty array when none are printed.
 - Keep storagePath values unchanged.
 
 PARTIAL EXTRACTIONS:
@@ -439,7 +446,9 @@ ${JSON.stringify(partials)}`,
       throw new Error(`OpenAI merge failed: ${await mergeResponse.text()}`)
     }
 
-    const result = JSON.parse(getOutputText(await mergeResponse.json()))
+    const parsed = JSON.parse(getOutputText(await mergeResponse.json()))
+    const project = await enrichProjectWithCountyGis(parsed.project)
+    const result = {...parsed, project}
 
     return NextResponse.json({
       ok: true,

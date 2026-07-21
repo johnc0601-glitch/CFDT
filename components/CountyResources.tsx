@@ -20,7 +20,7 @@ const countyResources: Record<string, Resource[]> = {
   'Brunswick County': [
     {title: 'Unified Development Ordinance', description: 'County development and subdivision standards.', href: 'https://www.brunswickcountync.gov/DocumentCenter/View/5460'},
     {title: 'Planning Department', description: 'Applications, review procedures, and contacts.', href: 'https://www.brunswickcountync.gov/1139/Planning'},
-    {title: 'County GIS', description: 'Parcel, zoning, and mapping information.', href: 'https://gis.brunswickcountync.gov/'},
+    {title: 'County GIS', description: 'Parcel, zoning, and mapping information.', href: 'https://experience.arcgis.com/experience/0201d27723244840aea67c9f85892953'},
     {title: 'Meetings', description: 'Planning Board and county meeting information.', href: 'https://www.brunswickcountync.gov/calendar.aspx'},
   ],
 }

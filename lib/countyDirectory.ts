@@ -29,7 +29,7 @@ export const countyDirectory = [
       {title: 'Planning', description: 'County planning and development review.', url: 'https://www.brunswickcountync.gov/1139/Planning'},
       {title: 'Document Center', description: 'Official plans, agendas, reports, and records.', url: 'https://www.brunswickcountync.gov/DocumentCenter'},
       {title: 'UDO', description: 'County development rules and standards.', url: 'https://www.brunswickcountync.gov/DocumentCenter'},
-      {title: 'GIS', description: 'Parcel and mapping resources.', url: 'https://gis.brunswickcountync.gov/'},
+      {title: 'GIS', description: 'Parcel and mapping resources.', url: 'https://experience.arcgis.com/experience/0201d27723244840aea67c9f85892953'},
     ],
   },
 ] as const

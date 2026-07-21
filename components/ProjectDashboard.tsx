@@ -1,12 +1,16 @@
 'use client'
 
-import {useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
+import Link from 'next/link'
 import {GraphicViewer} from '@/components/GraphicViewer'
+import {HiltonBluffsPlanButton} from '@/components/HiltonBluffsPlanButton'
+import {getCountyWorkflow} from '@/lib/countyWorkflows'
 import type {Project} from '@/types/project'
 import type {ProjectMedia} from '@/types/projectMedia'
 import type {ProjectUpdate} from '@/types/projectUpdate'
 
 type UpdateKind = 'official' | 'news'
+type TimelineStage = NonNullable<Project['timeline']>[number]
 
 function formatDate(value?: string | null) {
   if (!value) return undefined
@@ -26,6 +30,21 @@ function normalizeStage(value?: string) {
   return 'future'
 }
 
+function normalizedText(value?: string | null) {
+  return value?.trim().toLowerCase() || ''
+}
+
+function findTimelineMatch(stageTitle: string, timeline: TimelineStage[]) {
+  const title = normalizedText(stageTitle)
+  const words = title.split(/\s+/).filter((word) => word.length > 3)
+
+  return timeline.find((item) => {
+    const candidate = normalizedText(item.title)
+    if (candidate === title) return true
+    return words.some((word) => candidate.includes(word))
+  })
+}
+
 function getKind(update: ProjectUpdate): UpdateKind {
   if (update.sourceType?.toLowerCase() === 'news') return 'news'
   const source = `${update.sourceName || ''} ${update.sourceUrl || ''}`.toLowerCase()
@@ -42,6 +61,46 @@ function getSourceName(update: ProjectUpdate) {
   }
 }
 
+function hasMapPoint(project: Project) {
+  return Number.isFinite(project.latitude) && Number.isFinite(project.longitude)
+}
+
+function osmEmbedUrl(latitude: number, longitude: number) {
+  const spread = 0.025
+  const params = new URLSearchParams({
+    bbox: [
+      longitude - spread,
+      latitude - spread,
+      longitude + spread,
+      latitude + spread,
+    ].join(','),
+    layer: 'mapnik',
+    marker: `${latitude},${longitude}`,
+  })
+
+  return `https://www.openstreetmap.org/export/embed.html?${params.toString()}`
+}
+
+function googleMapsUrl(latitude: number, longitude: number) {
+  const params = new URLSearchParams({
+    api: '1',
+    query: `${latitude},${longitude}`,
+  })
+
+  return `https://www.google.com/maps/search/?${params.toString()}`
+}
+
+function countyGis(project: Project) {
+  const county = project.countyName?.toLowerCase() || ''
+  if (county.includes('new hanover')) {
+    return {label: 'New Hanover GIS', url: 'https://gis.nhcgov.com/'}
+  }
+  if (county.includes('brunswick')) {
+    return {label: 'Brunswick GIS', url: 'https://experience.arcgis.com/experience/0201d27723244840aea67c9f85892953'}
+  }
+  return {label: 'Pender GIS', url: 'https://gis.pendercountync.gov/maps/'}
+}
+
 export function ProjectDashboard({
   project,
   graphics,
@@ -56,16 +115,17 @@ export function ProjectDashboard({
   const [graphicIndex, setGraphicIndex] = useState(0)
   const [viewerOpen, setViewerOpen] = useState(false)
   const [filter, setFilter] = useState<'all' | UpdateKind>('all')
+  const [graphicTitle, setGraphicTitle] = useState('')
+  const [graphicsBusy, setGraphicsBusy] = useState(false)
+  const [showAdminControls, setShowAdminControls] = useState(false)
 
   const projectSlug =
     typeof project.slug === 'string'
       ? project.slug
       : project.slug?.current || ''
 
-  useEffect(() => {
-    let cancelled = false
-
-    async function loadLiveGraphics() {
+  const loadLiveGraphics = useCallback(
+    async (options?: {quiet?: boolean}) => {
       try {
         if (!projectSlug) return
 
@@ -85,13 +145,18 @@ export function ProjectDashboard({
           )
         }
 
-        if (!cancelled) {
-          setLiveGraphics(
-            Array.isArray(result.graphics)
-              ? result.graphics
-              : [],
-          )
-          setGraphicIndex(0)
+        const nextGraphics = Array.isArray(result.graphics)
+          ? result.graphics
+          : []
+
+        setLiveGraphics(nextGraphics)
+        setGraphicIndex((current) =>
+          nextGraphics.length
+            ? Math.min(current, nextGraphics.length - 1)
+            : 0,
+        )
+
+        if (!options?.quiet) {
           setGraphicsMessage(
             `${result.count || 0} live graphic${
               result.count === 1 ? '' : 's'
@@ -99,29 +164,47 @@ export function ProjectDashboard({
           )
         }
       } catch (error) {
-        if (!cancelled) {
-          setGraphicsMessage(
-            error instanceof Error
-              ? error.message
-              : 'Could not refresh project graphics.',
-          )
-        }
+        setGraphicsMessage(
+          error instanceof Error
+            ? error.message
+            : 'Could not refresh project graphics.',
+        )
       }
-    }
+    },
+    [projectSlug],
+  )
 
+  useEffect(() => {
     void loadLiveGraphics()
+  }, [loadLiveGraphics])
 
-    return () => {
-      cancelled = true
-    }
-  }, [projectSlug])
+  useEffect(() => {
+    const host = window.location.hostname
+    setShowAdminControls(host === 'localhost' || host === '127.0.0.1')
+  }, [])
+
+  const selectedGraphic = liveGraphics[graphicIndex]
+  const heroGraphic =
+    liveGraphics.find((graphic) => graphic.category?.toLowerCase() === 'hero') ||
+    liveGraphics[0]
+
+  useEffect(() => {
+    setGraphicTitle(selectedGraphic?.title || '')
+  }, [selectedGraphic?._id, selectedGraphic?.title])
 
   const timeline = project.timeline || []
-  const currentStage =
-    timeline.find((stage) => normalizeStage(stage.stageStatus) === 'current')?.title ||
-    project.status ||
-    'Status not entered'
-
+  const countyWorkflow = getCountyWorkflow(project.countyName, project.projectType)
+  const dashboardTimeline: TimelineStage[] = countyWorkflow.length
+    ? countyWorkflow.map((stage) => {
+        const match = findTimelineMatch(stage.title, timeline)
+        return {
+          title: stage.title,
+          description: match?.description || stage.description,
+          date: match?.date,
+          stageStatus: match?.stageStatus || 'Future',
+        }
+      })
+    : timeline
   const displayUpdates = useMemo(
     () =>
       updates
@@ -135,22 +218,122 @@ export function ProjectDashboard({
     [updates, filter],
   )
 
-  const selectedGraphic = liveGraphics[graphicIndex]
   const acreage =
     project.buildableAcres ??
     project.siteAcres ??
     project.totalSiteAcres ??
     project.totalPropertyAcres
+  const explicitDensity =
+    typeof project.densityUnitsPerAcre === 'number'
+      ? project.densityUnitsPerAcre
+      : undefined
+  const density =
+    explicitDensity ??
+    (project.homesProposed && acreage ? project.homesProposed / acreage : undefined)
+  const proposedTrafficTrips =
+    project.trafficMetrics?.dailyTrips ??
+    (typeof project.estimatedWeekdayVehicleTrips === 'number'
+      ? project.estimatedWeekdayVehicleTrips
+      : undefined)
+  const housingMix = [
+    ['Single-family detached', project.singleFamilyDetachedUnits],
+    ['Townhomes / attached', project.singleFamilyAttachedUnits],
+    ['Multifamily', project.multifamilyUnits],
+  ].filter(([, value]) => typeof value === 'number' && value > 0) as [string, number][]
+
+  async function renameSelectedGraphic() {
+    if (!projectSlug || !selectedGraphic?._id) return
+    const title = graphicTitle.trim()
+    if (!title) {
+      setGraphicsMessage('Enter a graphic title.')
+      return
+    }
+
+    setGraphicsBusy(true)
+    setGraphicsMessage('Renaming graphic...')
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(projectSlug)}/graphics`,
+        {
+          method: 'PATCH',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({graphicId: selectedGraphic._id, title}),
+        },
+      )
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Could not rename graphic.')
+      }
+
+      await loadLiveGraphics({quiet: true})
+      setGraphicsMessage('Graphic renamed.')
+    } catch (error) {
+      setGraphicsMessage(
+        error instanceof Error ? error.message : 'Could not rename graphic.',
+      )
+    } finally {
+      setGraphicsBusy(false)
+    }
+  }
+
+  async function deleteSelectedGraphic() {
+    if (!projectSlug || !selectedGraphic?._id) return
+
+    const confirmed = window.confirm(
+      `Delete "${selectedGraphic.title}" from this project?`,
+    )
+    if (!confirmed) return
+
+    setGraphicsBusy(true)
+    setGraphicsMessage('Deleting graphic...')
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(projectSlug)}/graphics`,
+        {
+          method: 'DELETE',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({graphicId: selectedGraphic._id}),
+        },
+      )
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Could not delete graphic.')
+      }
+
+      setGraphicIndex(0)
+      await loadLiveGraphics({quiet: true})
+      setGraphicsMessage('Graphic deleted.')
+    } catch (error) {
+      setGraphicsMessage(
+        error instanceof Error ? error.message : 'Could not delete graphic.',
+      )
+    } finally {
+      setGraphicsBusy(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
       <section className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-        <div className="grid lg:grid-cols-[1.35fr_1fr_1fr_1fr_1fr]">
-          <div className="border-b border-slate-200 p-6 lg:border-b-0 lg:border-r">
+        <div className="grid">
+          <div>
+            <div>
+            {heroGraphic?.imageUrl && (
+              <img
+                src={heroGraphic.imageUrl}
+                alt={heroGraphic.imageAlt || heroGraphic.title || project.name}
+                className="h-[260px] w-full bg-slate-100 object-cover md:h-[340px] xl:h-[420px]"
+              />
+            )}
+            <div className="p-6">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#6f8b63]">
               Development
             </p>
-            <h1 className="mt-2 text-4xl font-bold tracking-tight text-[#142033]">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#142033] xl:text-4xl">
               {project.name}
             </h1>
             <p className="mt-3 text-base text-slate-700">
@@ -165,24 +348,48 @@ export function ProjectDashboard({
             <p className="mt-1 text-sm text-slate-500">
               {project.countyName || 'County not entered'}
             </p>
+            <p className="mt-5 max-w-5xl text-base leading-7 text-slate-700">
+              {project.summary || 'A plain-English project summary has not been entered yet.'}
+            </p>
+            {(projectSlug === 'hilton-bluffs' || (showAdminControls && projectSlug)) && (
+              <div className="mt-5 flex flex-wrap gap-3">
+                {projectSlug === 'hilton-bluffs' && <HiltonBluffsPlanButton />}
+                {showAdminControls && projectSlug && (
+                  <Link
+                    href={`/admin/projects/${projectSlug}/edit`}
+                    className="inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-bold text-[#244f73]"
+                  >
+                    Edit development
+                  </Link>
+                )}
+              </div>
+            )}
+            </div>
+            </div>
           </div>
 
-          <SummaryCell label="Current Stage" value={currentStage} tone="amber" />
-          <SummaryCell
-            label="Case Number"
-            value={project.caseNumber || project.parcelId || 'Not entered'}
-            tone="blue"
-          />
-          <SummaryCell
-            label="Last County Action"
-            value={formatDate(project.latestUpdateDate) || 'Not entered'}
-            tone="green"
-          />
-          <SummaryCell
-            label="Next Expected Step"
-            value={project.nextStep || 'Not entered'}
-            tone="green"
-          />
+          <div className="grid border-t border-slate-200 md:grid-cols-4">
+            <SummaryCell
+              label="Homes Proposed"
+              value={(project.homesProposed || 0).toLocaleString()}
+              tone="amber"
+            />
+            <SummaryCell
+              label="Acres"
+              value={acreage ? acreage.toLocaleString() : 'Not entered'}
+              tone="blue"
+            />
+            <SummaryCell
+              label="Density"
+              value={density ? `${density.toFixed(2)} units/ac` : 'Not entered'}
+              tone="slate"
+            />
+            <SummaryCell
+              label="Daily Vehicle Trips"
+              value={proposedTrafficTrips ? proposedTrafficTrips.toLocaleString() : 'Not entered'}
+              tone="rose"
+            />
+          </div>
         </div>
       </section>
 
@@ -190,20 +397,27 @@ export function ProjectDashboard({
         <div className="grid xl:grid-cols-[0.82fr_1.35fr_1.02fr]">
           <div className="border-b border-slate-200 p-6 xl:border-b-0 xl:border-r">
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8b63]">
-              Verified Milestones
+              {countyWorkflow.length
+                ? `${project.countyName || 'County'} Process`
+                : 'Verified Milestones'}
             </p>
-            <h2 className="mt-2 text-xl font-bold">Project Timeline</h2>
+            <h2 className="mt-2 text-xl font-bold">Approval Timeline</h2>
+            {countyWorkflow.length > 0 && (
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                County process steps with project-specific milestones overlaid.
+              </p>
+            )}
 
             <div className="mt-7">
-              {timeline.length ? (
-                timeline.map((stage, index) => {
+              {dashboardTimeline.length ? (
+                dashboardTimeline.map((stage, index) => {
                   const state = normalizeStage(stage.stageStatus)
                   return (
                     <article
                       key={`${stage.title}-${index}`}
-                      className={`relative pl-11 ${index < timeline.length - 1 ? 'pb-7' : ''}`}
+                      className={`relative pl-11 ${index < dashboardTimeline.length - 1 ? 'pb-7' : ''}`}
                     >
-                      {index < timeline.length - 1 && (
+                      {index < dashboardTimeline.length - 1 && (
                         <span
                           className={`absolute left-[15px] top-8 h-[calc(100%-1rem)] w-px ${
                             state === 'complete' ? 'bg-emerald-500' : 'bg-slate-300'
@@ -295,6 +509,42 @@ export function ProjectDashboard({
                     ? 'Graphic records were found, but their image field is not linked.'
                     : 'No public graphics uploaded yet.'}
                 </p>
+              </div>
+            )}
+
+            {showAdminControls && selectedGraphic && (
+              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500">
+                  Graphic tools
+                </p>
+                <label className="mt-3 block">
+                  <span className="text-xs font-bold text-slate-600">
+                    Graphic title
+                  </span>
+                  <input
+                    value={graphicTitle}
+                    onChange={(event) => setGraphicTitle(event.target.value)}
+                    className="mt-2 h-10 w-full rounded-lg border border-slate-300 px-3 text-sm"
+                  />
+                </label>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => void renameSelectedGraphic()}
+                    disabled={graphicsBusy}
+                    className="rounded-lg bg-[#244f73] px-4 py-2 text-sm font-bold text-white disabled:opacity-40"
+                  >
+                    Rename graphic
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void deleteSelectedGraphic()}
+                    disabled={graphicsBusy}
+                    className="rounded-lg border border-red-300 px-4 py-2 text-sm font-bold text-red-700 disabled:opacity-40"
+                  >
+                    Delete graphic
+                  </button>
+                </div>
               </div>
             )}
 
@@ -405,13 +655,115 @@ export function ProjectDashboard({
         </div>
       </section>
 
+      {hasMapPoint(project) && (
+        <LocationMap project={project} />
+      )}
+
       {viewerOpen && selectedGraphic && (
         <GraphicViewer
-          items={graphics}
+          items={liveGraphics}
           startIndex={graphicIndex}
           onClose={() => setViewerOpen(false)}
         />
       )}
+    </div>
+  )
+}
+
+function LocationMap({project}: {project: Project}) {
+  const latitude = project.latitude as number
+  const longitude = project.longitude as number
+  const officialGis = countyGis(project)
+  const hasPlanningContext = Boolean(
+    project.approvingAuthority || project.parcelAcres || project.currentZoning?.length ||
+    project.floodZones?.length || project.waterProvider || project.sewerProvider,
+  )
+
+  return (
+    <section className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+      <div className="grid gap-0 lg:grid-cols-[1.35fr_0.85fr]">
+        <div className="min-h-[360px] bg-slate-100">
+          <iframe
+            title={`${project.name} location map`}
+            src={osmEmbedUrl(latitude, longitude)}
+            className="h-[360px] w-full border-0"
+            loading="lazy"
+          />
+        </div>
+        <div className="p-6">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8b63]">
+            Location Reference
+          </p>
+          <h2 className="mt-2 text-xl font-bold">Project Map</h2>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Use the map to zoom, pan, and understand nearby roads. {officialGis.label}
+            {' '}remains the official parcel source.
+          </p>
+          {project.locationDescription && (
+            <p className="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-700">
+              {project.locationDescription}
+            </p>
+          )}
+          <div className="mt-4 grid gap-2 text-sm">
+            <div className="rounded-lg border border-slate-200 px-3 py-2">
+              <span className="font-bold">Coordinates:</span>{' '}
+              {latitude.toFixed(6)}, {longitude.toFixed(6)}
+            </div>
+            {project.parcelId && (
+              <div className="rounded-lg border border-slate-200 px-3 py-2">
+                <span className="font-bold">Parcel PINs:</span>{' '}
+                {project.parcelId}
+              </div>
+            )}
+          </div>
+          {hasPlanningContext && (
+            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500">
+                Official planning context
+              </p>
+              <dl className="mt-3 grid gap-2 text-sm">
+                {project.approvingAuthority && <ContextRow label="Approving authority" value={project.approvingAuthority} />}
+                {project.parcelAcres && <ContextRow label="Parcel acreage" value={project.parcelAcres.toLocaleString()} />}
+                {project.municipalityName && <ContextRow label="Jurisdiction" value={project.municipalityName} />}
+                {project.currentZoning?.length && <ContextRow label="Parcel zoning intersections" value={project.currentZoning.join(', ')} />}
+                {project.floodZones?.length && <ContextRow label="Flood-zone intersection" value={project.floodZones.join(', ')} />}
+                {project.waterProvider && <ContextRow label="Water guidance" value={project.waterProvider} />}
+                {project.sewerProvider && <ContextRow label="Sewer guidance" value={project.sewerProvider} />}
+              </dl>
+              <p className="mt-3 text-xs leading-5 text-slate-500">
+                Project zoning comes from the planning record. GIS intersections describe the full matched parcel and are informational, not legal surveys.
+              </p>
+            </div>
+          )}
+          <div className="mt-5 flex flex-wrap gap-2">
+            <a
+              href={googleMapsUrl(latitude, longitude)}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg bg-[#244f73] px-4 py-2 text-sm font-bold text-white"
+            >
+              Open in Google Maps
+            </a>
+            <a
+              href={officialGis.url}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-bold text-[#244f73]"
+            >
+              Open {officialGis.label}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ContextRow({label, value}: {label: string; value: string}) {
+  return (
+    <div className="grid grid-cols-[120px_1fr] gap-3">
+      <dt className="font-semibold text-slate-500">{label}</dt>
+      <dd className="font-semibold text-slate-800">{value}</dd>
     </div>
   )
 }
@@ -423,14 +775,18 @@ function SummaryCell({
 }: {
   label: string
   value: string
-  tone: 'amber' | 'blue' | 'green'
+  tone: 'amber' | 'blue' | 'green' | 'slate' | 'rose'
 }) {
   const dot =
     tone === 'amber'
       ? 'bg-amber-400'
       : tone === 'blue'
         ? 'bg-blue-500'
-        : 'bg-emerald-500'
+        : tone === 'slate'
+          ? 'bg-slate-500'
+          : tone === 'rose'
+            ? 'bg-rose-500'
+          : 'bg-emerald-500'
 
   return (
     <div className="border-b border-slate-200 p-5 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">

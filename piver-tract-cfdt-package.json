@@ -1,0 +1,305 @@
+{
+  "packageVersion": "1.0",
+  "project": {
+    "name": "Piver Tract",
+    "slug": "piver-tract",
+    "county": "Pender",
+    "caseNumber": "SUBMAJ 2026-147",
+    "status": "Pending",
+    "projectType": "Major Subdivision",
+    "approvingAuthority": "Pender County",
+    "summary": "Piver Tract is a proposed major residential subdivision in Hampstead. The Pender County preliminary plat package describes 358 single-family homes on about 147.5 acres east of Highway 17 and southeast of Country Club Drive. The plans show private roads open to public use, sidewalks, trails, boardwalks, waterfront amenities, community docks, a community boating facility, a community center, a sales center, wetlands, floodplain areas, and stormwater ponds.",
+    "locationDescription": "Eastern side of Highway 17 and southeast of Country Club Drive, along Spring Garden Road near Olde Point and Country Club Drive in Hampstead.",
+    "homesProposed": 358,
+    "residentialUnits": 358,
+    "siteAcres": 147.5,
+    "acreage": 147.5,
+    "buildableAcres": 0,
+    "commercialSquareFeet": 0,
+    "developer": "Landeavor Acquisitions, LLC",
+    "applicant": "Landeavor Acquisitions, LLC",
+    "owner": "Multiple owners listed in application",
+    "engineer": "Paramounte Engineering, Inc.",
+    "zoning": "Planned Development (PD)",
+    "latestUpdateDate": "2026-03-25",
+    "latestUpdate": "Pender County lists SUBMAJ 2026-147 Piver Tract Preliminary Plat as pending, last updated March 25, 2026.",
+    "nextStep": "County technical review and any public hearing or appeal status should be verified before final publication.",
+    "parcels": [
+      "3292-99-5735-0000",
+      "3292-98-3715-0000",
+      "3292-99-8024-0000",
+      "3292-98-2955-0000",
+      "3292-98-5886-0000",
+      "3292-99-2121-0000"
+    ],
+    "roads": [
+      "Highway 17",
+      "Country Club Drive",
+      "Spring Garden Road",
+      "Olde Point Road",
+      "Sawgrass Road",
+      "Ravenswood Road"
+    ]
+  },
+  "timeline": [
+    {
+      "date": "2026-01-06",
+      "title": "Master Development Plan referenced",
+      "label": "MDP Referenced",
+      "stageStatus": "complete",
+      "status": "complete",
+      "description": "The overall site plan notes that the project and proposed phases will meet the notes and conditions from MDP 2025-81, referenced as approved on January 6, 2026. Verify the final MDP status against county records before publication.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 22
+    },
+    {
+      "date": "2026-03-06",
+      "title": "Preliminary plat application signed",
+      "label": "Application Signed",
+      "stageStatus": "complete",
+      "status": "complete",
+      "description": "The application signature record shows Adam Lorry signed the preliminary plat application on March 6, 2026.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 4
+    },
+    {
+      "date": "2026-03-06",
+      "title": "Preliminary plat plan set dated",
+      "label": "Plan Set Dated",
+      "stageStatus": "complete",
+      "status": "complete",
+      "description": "The cover sheet for the Piver Tract preliminary plat TRC submittal is dated March 6, 2026.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 20
+    },
+    {
+      "date": "2026-03-25",
+      "title": "County project listing updated",
+      "label": "County Listing Updated",
+      "stageStatus": "current",
+      "status": "current",
+      "description": "Pender County's Major Subdivisions page lists SUBMAJ 2026-147 Piver Tract Preliminary Plat as pending with a last updated date of March 25, 2026.",
+      "sourceDocument": "Pender County Major Subdivisions list",
+      "sourcePage": null
+    },
+    {
+      "date": "",
+      "title": "County technical review",
+      "label": "Technical Review",
+      "stageStatus": "future",
+      "status": "future",
+      "description": "The exact Technical Review Committee comments, Planning Board action, appeal status, and final decision milestones should be verified from county records before final publication.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": null
+    }
+  ],
+  "traffic": {
+    "trafficStudyProvided": false,
+    "trafficCounts": "",
+    "roadImprovements": "",
+    "notes": "The overall site plan contains a Trip Generation label, but no trip totals or required road improvements were verified from the extracted package text."
+  },
+  "metrics": {
+    "openSpaceAcres": 20.26,
+    "activeOpenSpaceAcres": 10.13,
+    "passiveOpenSpaceAcres": 10.13,
+    "requiredOpenSpaceAcres": 10.74,
+    "stormwaterPonds": 4,
+    "mainPhases": 2
+  },
+  "documents": [
+    {
+      "title": "SUBMAJ 2026-147 Piver Tract Preliminary Plat",
+      "documentType": "Preliminary Plat Package",
+      "sourceUrl": "https://www.pendercountync.gov/DocumentCenter/View/5398/SUBMAJ-2026-147-Piver-Tract-Preliminary-Plat",
+      "storagePath": "",
+      "date": "2026-03-25",
+      "notes": "Official Pender County preliminary plat package. Store this as the single official project document unless a later county staff report or decision document becomes necessary."
+    }
+  ],
+  "graphicsSuggestions": [
+    {
+      "label": "Overview",
+      "category": "Overview",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "pageNumber": 20,
+      "confidence": "high",
+      "reason": "Cover sheet includes the project title, vicinity map, consultants, utilities contacts, and sheet index."
+    },
+    {
+      "label": "Neighborhood Layout",
+      "category": "Neighborhood Layout",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "pageNumber": 22,
+      "confidence": "high",
+      "reason": "Overall site plan shows the full subdivision layout, roads, phases, open space, wetlands, utilities, and amenities."
+    },
+    {
+      "label": "Traffic & Access",
+      "category": "Traffic & Access",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "pageNumber": 23,
+      "confidence": "medium",
+      "reason": "Detail site plan labels the project primary entrance, Country Club Drive, and related access features. User should choose the clearest access sheet in Graphics."
+    },
+    {
+      "label": "Environmental Features",
+      "category": "Environmental Features",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "pageNumber": 22,
+      "confidence": "high",
+      "reason": "Overall plan labels wetlands, coastal wetlands, normal high water line, CAMA setback, flood notes, and wetland areas."
+    },
+    {
+      "label": "Open Space & Recreation",
+      "category": "Open Space & Recreation",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "pageNumber": 22,
+      "confidence": "high",
+      "reason": "Overall plan includes open space calculations, active and passive open space, parks, trails, docks, kayak launch, and community amenities."
+    },
+    {
+      "label": "Stormwater",
+      "category": "Stormwater",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "pageNumber": 18,
+      "confidence": "medium",
+      "reason": "Stormwater narrative describes four wet detention ponds; site plan pages show stormwater pond locations. User should select the clearest pond sheet in Graphics."
+    },
+    {
+      "label": "Road Sections",
+      "category": "Traffic & Access",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "pageNumber": 33,
+      "confidence": "medium",
+      "reason": "Road cross sections show private road, alley, sidewalk, and median road details."
+    }
+  ],
+  "communityConcerns": [
+    {
+      "topic": "Traffic and access",
+      "summary": "The project is near Highway 17, Country Club Drive, Spring Garden Road, Olde Point Road, and existing neighborhoods. The package identifies private roads open to public use, but trip totals and required road improvements were not verified from the extracted text.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 22
+    },
+    {
+      "topic": "Wetlands, floodplain, and coastal areas",
+      "summary": "The plans label wetlands, coastal wetlands, a normal high water line, CAMA setback areas, 100-year flood line, Old Topsail Creek, and Nixon's Mill Creek. All wetlands are noted as remaining undisturbed as passive open space.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 22
+    },
+    {
+      "topic": "Stormwater",
+      "summary": "The stormwater narrative says runoff will be conveyed to four wet detention ponds and designed for the 2-, 10-, and 25-year events, with the 50-year event analyzed for overtopping.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 18
+    },
+    {
+      "topic": "Open space and amenities",
+      "summary": "The overall plan lists 20.26 acres of open space, including 10.13 acres of active open space and 10.13 acres of passive open space in wetlands. Amenities shown include trails, boardwalks, docks, boating access, parks, mailbox areas, and a community amenity area.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 22
+    },
+    {
+      "topic": "Scale of growth",
+      "summary": "The preliminary plat package describes 358 single-family homes on about 147.5 acres.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 1
+    }
+  ],
+  "sourceReferences": [
+    {
+      "field": "caseNumber",
+      "value": "SUBMAJ 2026-147",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 1
+    },
+    {
+      "field": "homesProposed",
+      "value": "358 single-family homes",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 1
+    },
+    {
+      "field": "siteAcres",
+      "value": "Total acres +/- 147.5",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 22
+    },
+    {
+      "field": "zoning",
+      "value": "PD, Planned Development",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 1
+    },
+    {
+      "field": "openSpace",
+      "value": "20.26 acres total open space",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 22
+    },
+    {
+      "title": "Pender County Major Subdivisions",
+      "url": "https://pendercountync.gov/362/Major-Subdivisions",
+      "sourceDocument": "Pender County Planning & Community Development",
+      "notes": "County page showing pending and approved major subdivision cases."
+    },
+    {
+      "title": "Pender County Unified Development Ordinance",
+      "url": "https://pendercountync.gov/517/Unified-Development-Ordinance-UDO",
+      "sourceDocument": "Pender County Planning & Community Development",
+      "notes": "County zoning, subdivision, and land-use rules used to review development applications."
+    }
+  ],
+  "reviewFlags": [
+    {
+      "field": "homesProposed",
+      "severity": "review",
+      "message": "Application page says 358 single-family homes. Stormwater narrative describes 355 lots plus 3 existing lots. Keep 358 as the public total unless county staff clarifies otherwise.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 1
+    },
+    {
+      "field": "siteAcres",
+      "severity": "review",
+      "message": "Overall site plan labels total acres as approximately 147.5. Public notice and MDP references should be checked before final publication if exact acreage matters.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 22
+    },
+    {
+      "field": "status",
+      "severity": "review",
+      "message": "Status is set to Pending based on Pender County's Major Subdivisions list, last updated March 25, 2026. Verify current status before public launch.",
+      "sourceDocument": "Pender County Major Subdivisions list",
+      "sourcePage": null
+    },
+    {
+      "field": "mdpStatus",
+      "severity": "review",
+      "message": "The plan sheet references MDP 2025-81 as approved on January 6, 2026, but current county MDP listings should be checked before describing the MDP as approved.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": 22
+    },
+    {
+      "field": "traffic",
+      "severity": "missing",
+      "message": "No verified traffic impact totals or required road improvements were extracted from the package text.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": null
+    },
+    {
+      "field": "graphics",
+      "severity": "review",
+      "message": "Graphics suggestions identify likely pages, but the user should choose final sheets in the Graphics workflow.",
+      "sourceDocument": "SUBMAJ 2026-147 Piver Website Package Final",
+      "sourcePage": null
+    }
+  ],
+  "reviewNotes": [
+    "Use the official county PDF as the only project document unless a staff report or final decision document is added later.",
+    "Verify current project status from Pender County before publication.",
+    "Treat 358 homes as the public total; note that the stormwater narrative describes 355 new lots plus 3 existing lots.",
+    "Traffic impact details were not verified from the extracted text.",
+    "Choose final graphics manually in the Graphics workflow."
+  ]
+}

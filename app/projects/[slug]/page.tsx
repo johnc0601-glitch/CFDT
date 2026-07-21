@@ -1,15 +1,11 @@
 import {notFound} from 'next/navigation'
 import {Header} from '@/components/Header'
 import {Footer} from '@/components/Footer'
-import {StatusBadge} from '@/components/StatusBadge'
-import {FactCard} from '@/components/FactCard'
 import {Timeline} from '@/components/Timeline'
 import {ResourceGrid} from '@/components/ResourceGrid'
-import {PageHero} from '@/components/PageHero'
 import {GraphicGallery} from '@/components/GraphicGallery'
 import {DocumentList} from '@/components/DocumentList'
 import {Tabs} from '@/components/Tabs'
-import {HiltonBluffsPlanButton} from '@/components/HiltonBluffsPlanButton'
 import {ProjectDashboard} from '@/components/ProjectDashboard'
 import {
   getProjectBySlug,
@@ -37,30 +33,12 @@ export default async function ProjectPage({params}: Props) {
 
   if (!project) notFound()
 
-  const siteAcres = project.siteAcres ?? project.totalSiteAcres
-
   return (
     <main className="min-h-screen bg-[#f3f5f2] text-[#142033]">
       <Header />
 
       <section className="mx-auto max-w-[1500px] space-y-10 px-4 py-6 md:px-6 md:py-10">
         <ProjectDashboard project={project} graphics={graphics} updates={updates} />
-
-        <PageHero
-          eyebrow="Development"
-          title={project.name}
-          description={project.summary}
-          titleAction={slug === 'hilton-bluffs' ? <HiltonBluffsPlanButton /> : undefined}
-        >
-          <StatusBadge status={project.status} />
-        </PageHero>
-
-        <section className="grid gap-5 md:grid-cols-4">
-          <FactCard label="Homes Proposed" value={project.homesProposed} />
-          <FactCard label="Site Acres" value={siteAcres} />
-          <FactCard label="County" value={project.countyName} />
-          <FactCard label="Approving Authority" value={project.approvingAuthority} />
-        </section>
 
         <Tabs
           tabs={[

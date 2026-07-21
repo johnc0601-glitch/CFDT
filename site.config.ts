@@ -14,8 +14,8 @@ export const counties = [
 export const navigation = [
   {label: 'Home', href: '/'},
   {label: 'Search', href: '/search'},
+  {label: 'Counties', href: '/counties'},
   {label: 'Map', href: '/map'},
   {label: 'Meetings', href: '/meetings'},
   {label: 'Developers', href: '/developers'},
-  {label: 'Workspace', href: '/admin'},
 ]

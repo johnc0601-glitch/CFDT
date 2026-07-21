@@ -8,6 +8,7 @@ import type {ProjectIntake} from '@/types/projectIntake'
 
 const projectFields = `
   _id,
+  _updatedAt,
   homesRemaining,
   homesBuilt,
   homesApproved,
@@ -16,12 +17,17 @@ const projectFields = `
   name,
   status,
   homesProposed,
+  singleFamilyDetachedUnits,
+  singleFamilyAttachedUnits,
+  multifamilyUnits,
   siteAcres,
   totalPropertyAcres,
   conservationFloodplainAcres,
   developer,
   engineer,
   parcelId,
+  parcelIds,
+  parcelAcres,
   projectType,
   approvingAuthority,
   locationDescription,
@@ -30,6 +36,10 @@ const projectFields = `
   latestUpdate,
   nextStep,
   zoning,
+  currentZoning,
+  floodZones,
+  possibleWetlands,
+  gisContext,
   futureLandUse,
   waterProvider,
   sewerProvider,
@@ -39,9 +49,22 @@ const projectFields = `
   latitude,
   longitude,
   slug,
-  "countyName": county->name,
-  "municipalityName": municipality->name,
-  "heroImageUrl": heroImage.asset->url,
+  "countyName": coalesce(county->name, countyName),
+  "municipalityName": coalesce(municipality->name, municipalityName),
+  "heroImageUrl": coalesce(
+    heroImage.asset->url,
+    *[
+      _type == "projectGraphic" &&
+      project._ref == ^._id &&
+      lower(coalesce(displayStatus, "library")) in ["featured", "library"]
+    ] | order(
+      select(lower(category) == "hero" => 0, 1) asc,
+      select(lower(coalesce(displayStatus, "library")) == "featured" => 0, 1) asc,
+      title asc
+    )[0] {
+      "url": coalesce(image.asset->url, graphic.asset->url)
+    }.url
+  ),
   "heroImageAlt": heroImage.alt,
   "heroImageCaption": heroImage.caption
 `
@@ -62,15 +85,79 @@ const meetingFields = `
   "projectSlug": project->slug.current
 `
 
+function projectIdentity(project: Project) {
+  const slug = typeof project.slug === 'string'
+    ? project.slug
+    : project.slug?.current
+
+  return (slug || project.name || project._id).toLowerCase().trim()
+}
+
+function projectScore(project: Project) {
+  return [
+    project.heroImageUrl,
+    project.summary,
+    project.latestUpdateDate,
+    project.timeline?.length,
+    project.officialResources?.length,
+    project.homesProposed,
+    project.siteAcres ?? project.totalSiteAcres,
+    project.latitude && project.longitude,
+  ].filter(Boolean).length
+}
+
+function updatedTime(project: Project) {
+  const updatedAt = typeof project._updatedAt === 'string' ? project._updatedAt : ''
+  const time = Date.parse(updatedAt)
+  return Number.isFinite(time) ? time : 0
+}
+
+function dedupeProjects(projects: Project[]) {
+  const byIdentity = new Map<string, Project>()
+
+  for (const project of projects) {
+    const key = projectIdentity(project)
+    const current = byIdentity.get(key)
+
+    if (
+      !current ||
+      projectScore(project) > projectScore(current) ||
+      (
+        projectScore(project) === projectScore(current) &&
+        updatedTime(project) > updatedTime(current)
+      )
+    ) {
+      byIdentity.set(key, project)
+    }
+  }
+
+  return Array.from(byIdentity.values()).sort((a, b) =>
+    (a.name || '').localeCompare(b.name || ''),
+  )
+}
+
 export async function getAllProjects(): Promise<Project[]> {
-  return sanity.fetch(`*[_type == "project"] | order(name asc) { ${projectFields} }`)
+  const projects = await sanity.fetch<Project[]>(
+    `*[_type == "project"] | order(name asc) { ${projectFields} }`,
+  )
+  return dedupeProjects(projects)
 }
 
 export async function getProjectsByCounty(countyName: string): Promise<Project[]> {
-  return sanity.fetch(
-    `*[_type == "project" && county->name == $countyName] | order(name asc) { ${projectFields} }`,
-    {countyName}
+  const normalizedName = countyName
+    .toLowerCase()
+    .replace(/\s+county$/, '')
+    .trim()
+  const countyNames = [normalizedName, `${normalizedName} county`]
+
+  const projects = await sanity.fetch<Project[]>(
+    `*[
+      _type == "project" &&
+      lower(coalesce(county->name, countyName)) in $countyNames
+    ] | order(name asc) { ${projectFields} }`,
+    {countyNames},
   )
+  return dedupeProjects(projects)
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {

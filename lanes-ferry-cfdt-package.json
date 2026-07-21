@@ -1,0 +1,296 @@
+{
+  "packageVersion": "1.0",
+  "project": {
+    "name": "Lanes Ferry Landing",
+    "slug": "lanes-ferry-landing",
+    "county": "Pender",
+    "caseNumber": "MDP 2025-86",
+    "status": "Pending",
+    "projectType": "Master Development Plan",
+    "approvingAuthority": "Pender County",
+    "summary": "Lanes Ferry Landing is a proposed revision to a very large mixed-use residential master development plan in Rocky Point. The county package describes about 976.58 acres around NC 210 and Moore Town Road, with proposed residential neighborhoods, commercial land, amenity centers, walking trails, parks, sidewalks, wetlands, floodplain areas, and access points from NC 210 and Moore Town Road. The 2025 package lists 2,420 single-family detached units, 125 attached or townhome units, 205 multifamily units, and about 10 acres for roughly 15,000 square feet of commercial use.",
+    "locationDescription": "North and south of NC Highway 210 at Moore Town Road, about 1.8 miles east of I-40 Exit 408 in the Rocky Point District.",
+    "homesProposed": 2750,
+    "residentialUnits": 2750,
+    "singleFamilyDetachedUnits": 2420,
+    "singleFamilyAttachedUnits": 125,
+    "multifamilyUnits": 205,
+    "siteAcres": 976.58,
+    "acreage": 976.58,
+    "buildableAcres": 0,
+    "commercialSquareFeet": 15000,
+    "developer": "HCT Pender, LLC; River Rock Farm, LLC; Springfield Plantation II, Inc.; C Heide Trask, Jr.",
+    "applicant": "HCT Pender, LLC; River Rock Farm, LLC; Springfield Plantation II, Inc.; C Heide Trask, Jr.",
+    "owner": "HCT Pender, LLC; River Rock Farm, LLC; Springfield Plantation II, Inc.; C Heide Trask, Jr.",
+    "engineer": "Paramounte Engineering, Inc.",
+    "zoning": "Planned Development (PD) and Rural Agricultural (RA)",
+    "latestUpdateDate": "2025-08-15",
+    "latestUpdate": "Pender County lists MDP 2025-86 Lanes Ferry as pending, last updated August 15, 2025.",
+    "nextStep": "Verify current Planning Board or county action before publication, especially the final unit cap and any conditions attached to the 2025 master plan revision.",
+    "latitude": 34.432376,
+    "longitude": -77.839583,
+    "parcelId": "3245-84-0109-0000, 3255-11-7659-0000, 3245-80-3934-0000, 3254-19-4938-0000, 3254-09-9796-0000, 3254-09-9690-0000",
+    "parcels": [
+      "3245-84-0109-0000",
+      "3255-11-7659-0000",
+      "3245-80-3934-0000",
+      "3254-19-4938-0000",
+      "3254-09-9796-0000",
+      "3254-09-9690-0000"
+    ],
+    "roads": [
+      "NC Highway 210",
+      "Moore Town Road",
+      "I-40",
+      "East Essex Road",
+      "Calypso Drive"
+    ]
+  },
+  "timeline": [
+    {
+      "date": "2017-06-02",
+      "title": "Original master development plan approved",
+      "label": "Original MDP",
+      "stageStatus": "complete",
+      "status": "complete",
+      "description": "The 2025 county package states that the original Lanes Ferry Landing master development plan was approved on June 2, 2017.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "date": "2020-12-30",
+      "title": "Prior master plan revision approved",
+      "label": "Prior Revision",
+      "stageStatus": "complete",
+      "status": "complete",
+      "description": "The 2025 package states that a subsequent revision was approved on December 30, 2020.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "date": "2025-08-15",
+      "title": "2025 master plan revision listed by county",
+      "label": "2025 Revision",
+      "stageStatus": "current",
+      "status": "current",
+      "description": "Pender County's Master Development Plans page lists MDP 2025-86 Lanes Ferry as pending with a last updated date of August 15, 2025.",
+      "sourceDocument": "Pender County Master Development Plans list",
+      "sourcePage": null
+    },
+    {
+      "date": "",
+      "title": "County review and decision",
+      "label": "County Review",
+      "stageStatus": "future",
+      "status": "future",
+      "description": "Final county action, conditions, and any corrected unit cap should be verified from county records before final publication.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": null
+    }
+  ],
+  "traffic": {
+    "trafficStudyProvided": false,
+    "trafficCounts": "",
+    "roadImprovements": "",
+    "notes": "The narrative identifies major access points at NC 210 and Moore Town Road, but no verified trip totals or required road improvements were extracted from the package text."
+  },
+  "metrics": {
+    "singleFamilyDetachedUnits": 2420,
+    "singleFamilyAttachedUnits": 125,
+    "multifamilyUnits": 205,
+    "totalResidentialUnitsFromPackage": 2750,
+    "commercialAcres": 10,
+    "commercialSquareFeet": 15000,
+    "siteAcres": 976.58,
+    "overallDensityUnitsPerAcre": 3.69,
+    "amenityCenters": 3
+  },
+  "documents": [
+    {
+      "title": "MDP 2025-86 Lanes Ferry",
+      "documentType": "Master Development Plan Package",
+      "sourceUrl": "https://www.pendercountync.gov/DocumentCenter/View/4580/MDP-2025-86-Lanes-Ferry-",
+      "storagePath": "",
+      "date": "2025-08-15",
+      "notes": "Official Pender County master development plan package. Store this as the single official project document unless later staff reports or approval documents are added."
+    }
+  ],
+  "graphicsSuggestions": [
+    {
+      "label": "Overview",
+      "category": "Overview",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "pageNumber": 8,
+      "confidence": "high",
+      "reason": "The overall site plan contains the site information block, acreage, ownership, zoning, wetlands, floodplain labels, and the broad project layout."
+    },
+    {
+      "label": "Neighborhood Layout",
+      "category": "Neighborhood Layout",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "pageNumber": 9,
+      "confidence": "high",
+      "reason": "The detailed site plan pages show hundreds of lots, multifamily buildings, roads, and the internal layout."
+    },
+    {
+      "label": "Traffic & Access",
+      "category": "Traffic & Access",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "pageNumber": 10,
+      "confidence": "medium",
+      "reason": "The plan labels NC Highway 210, Moore Town Road, East Essex Road, and private roads. User should choose the clearest access sheet in Graphics."
+    },
+    {
+      "label": "Environmental Features",
+      "category": "Environmental Features",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "pageNumber": 8,
+      "confidence": "high",
+      "reason": "The plan labels wetlands, 100-year floodplain, 500-year floodplain, and floodway areas near the Northeast Cape Fear River."
+    },
+    {
+      "label": "Open Space & Recreation",
+      "category": "Open Space & Recreation",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "pageNumber": 6,
+      "confidence": "medium",
+      "reason": "The narrative describes three resort-style amenity centers, walking trails, numerous neighborhood parks, public and private spaces, and sidewalks."
+    },
+    {
+      "label": "Mixed Use / Commercial Area",
+      "category": "Neighborhood Layout",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "pageNumber": 8,
+      "confidence": "medium",
+      "reason": "The package describes about 10 acres for commercial use, and the site plan should be used to select the clearest commercial-area graphic."
+    },
+    {
+      "label": "Phasing",
+      "category": "Construction Phasing",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "pageNumber": 6,
+      "confidence": "medium",
+      "reason": "The narrative identifies Phase 1 north of NC 210 and southern Phase 2 and Phase 3 tracts. User should choose a plan sheet if phase boundaries are visually clear."
+    }
+  ],
+  "communityConcerns": [
+    {
+      "topic": "Scale of growth",
+      "summary": "The 2025 package lists a very large development program: 2,420 single-family detached units, 125 attached or townhome units, 205 multifamily units, and commercial land on about 976.58 acres.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "topic": "Traffic and access",
+      "summary": "The project surrounds NC 210 and Moore Town Road, with access points from NC 210 and Moore Town Road. Trip totals and required road improvements should be verified from traffic studies or county staff reports.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 6
+    },
+    {
+      "topic": "Wetlands and floodplain",
+      "summary": "The site plan labels extensive wetlands, floodway, 100-year floodplain, and 500-year floodplain areas near the Northeast Cape Fear River.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 8
+    },
+    {
+      "topic": "Mixed-use development",
+      "summary": "The 2025 package proposes about 10 acres of commercial land for roughly 15,000 square feet of commercial use, along with multiple housing types and amenity sites.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "topic": "Amenities and public spaces",
+      "summary": "The narrative says the project will include three resort-style amenity centers, walking trails, neighborhood parks, public and private spaces, tree-lined streets, and sidewalks.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 6
+    }
+  ],
+  "sourceReferences": [
+    {
+      "field": "caseNumber",
+      "value": "MDP 2025-86",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "siteAcres",
+      "value": "+/- 976.58 acres",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 6
+    },
+    {
+      "field": "homesProposed",
+      "value": "2,420 SFD + 125 SFA/townhome + 205 MF units",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "commercialSquareFeet",
+      "value": "+/- 10 acres for +/- 15,000 sf of commercial use",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "zoning",
+      "value": "PD, Planned Development and RA, Rural Agricultural",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "title": "Pender County Master Development Plans",
+      "url": "https://www.pendercountync.gov/400/Master-Development-Plans",
+      "sourceDocument": "Pender County Planning & Community Development",
+      "notes": "County page showing pending and approved master development plan cases."
+    },
+    {
+      "title": "Pender County Unified Development Ordinance",
+      "url": "https://pendercountync.gov/517/Unified-Development-Ordinance-UDO",
+      "sourceDocument": "Pender County Planning & Community Development",
+      "notes": "County zoning, subdivision, and land-use rules used to review development applications."
+    }
+  ],
+  "reviewFlags": [
+    {
+      "field": "homesProposed",
+      "severity": "review",
+      "message": "The PDF lists 2,420 SFD units, 125 SFA/townhome units, and 205 multifamily units, which totals 2,750 residential units. Verify the final approved or pending unit cap from county action before publication.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": 1
+    },
+    {
+      "field": "status",
+      "severity": "review",
+      "message": "Status is set to Pending based on the Pender County Master Development Plans list. Verify current status before public launch.",
+      "sourceDocument": "Pender County Master Development Plans list",
+      "sourcePage": null
+    },
+    {
+      "field": "traffic",
+      "severity": "missing",
+      "message": "No verified traffic impact totals or required road improvements were extracted from this package text.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": null
+    },
+    {
+      "field": "timeline",
+      "severity": "missing",
+      "message": "Planning Board action, Board of Commissioners action, and final conditions for the 2025 revision are not verified in this package.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": null
+    },
+    {
+      "field": "graphics",
+      "severity": "review",
+      "message": "Graphics suggestions identify likely pages, but the user should choose final sheets in the Graphics workflow.",
+      "sourceDocument": "MDP 2025-86 Lanes Ferry Website Package",
+      "sourcePage": null
+    }
+  ],
+  "reviewNotes": [
+    "Use the official county PDF as the only project document unless a staff report or final decision document is added later.",
+    "Verify the final unit cap before publication; the package values total 2,750 residential units.",
+    "Verify current project status from Pender County before publication.",
+    "Traffic impact details were not verified from the extracted text.",
+    "Choose final graphics manually in the Graphics workflow."
+  ]
+}

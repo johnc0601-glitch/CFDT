@@ -11,6 +11,37 @@ export const hiltonBluffsData: Partial<Project> = {
   "developer": "Copper Builders",
   "engineer": "Paramounte Engineering",
   "parcelId": "R00900-001-001-000",
+  "parcelIds": [
+    "R00900-001-001-000"
+  ],
+  "parcelAcres": 4020.96,
+  "latitude": 34.35206581455821,
+  "longitude": -77.9630916352402,
+  "municipalityName": "Unincorporated New Hanover County",
+  "currentZoning": [
+    "I-2",
+    "RA"
+  ],
+  "floodZones": [
+    "AE FLOODWAY",
+    "AE",
+    "0.2 PCT ANNUAL CHANCE FLOOD HAZARD",
+    "X"
+  ],
+  "gisContext": {
+    "provider": "New Hanover County GIS",
+    "status": "partial",
+    "verifiedAt": "2026-07-20T12:04:10.122Z",
+    "requestedParcelIds": [
+      "R00900-001-001-000"
+    ],
+    "unmatchedParcelIds": [],
+    "sourceUrl": "https://gis.nhcgov.com/server/rest/services/Layers/Parcels/FeatureServer/0",
+    "message": "Official parcels total 4,020.96 acres; the planning record lists 581.2 project acres. The project may use only part of the matched parcel.",
+    "warnings": [
+      "Official parcels total 4,020.96 acres; the planning record lists 581.2 project acres. The project may use only part of the matched parcel."
+    ]
+  },
   "approvingAuthority": "New Hanover County Technical Review Committee",
   "locationDescription": "4000 block of Castle Hayne Road, Castle Hayne, New Hanover County",
   "zoning": "Rural Agricultural (RA)",

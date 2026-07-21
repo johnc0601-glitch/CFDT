@@ -1,4 +1,5 @@
 import {NextResponse} from 'next/server'
+import {enrichProjectWithCountyGis, extractParcelIds} from '@/lib/gis'
 
 export const runtime = 'nodejs'
 
@@ -14,14 +15,15 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     const packageData = body?.package
-    const project = packageData?.project
+    const incomingProject = packageData?.project
 
-    if (!project?.name) {
+    if (!incomingProject?.name) {
       return NextResponse.json(
         {error: 'A reviewed project package is required.'},
         {status: 400},
       )
     }
+    const project = await enrichProjectWithCountyGis(incomingProject)
 
     const projectId = process.env.SANITY_PROJECT_ID
     const dataset = process.env.SANITY_DATASET
@@ -34,7 +36,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const slug = cleanSlug(project.slug || project.name)
+    const slug = cleanSlug(String(project.slug || project.name))
     const sanityId = `project.${slug}`
 
     const document = {
@@ -44,6 +46,19 @@ export async function POST(request: Request) {
       slug: {_type: 'slug', current: slug},
       countyName: project.county,
       caseNumber: project.caseNumber,
+      parcelId: project.parcelId,
+      parcelIds: extractParcelIds(project),
+      parcelAcres: project.parcelAcres,
+      latitude: project.latitude,
+      longitude: project.longitude,
+      municipalityName: project.municipalityName,
+      approvingAuthority: project.approvingAuthority,
+      currentZoning: project.currentZoning,
+      floodZones: project.floodZones,
+      possibleWetlands: project.possibleWetlands,
+      waterProvider: project.waterProvider,
+      sewerProvider: project.sewerProvider,
+      gisContext: project.gisContext,
       status: project.status,
       homesProposed: project.homesProposed,
       siteAcres: project.siteAcres,

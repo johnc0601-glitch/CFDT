@@ -14,6 +14,8 @@ const apiVersion =
   process.env.NEXT_PUBLIC_SANITY_API_VERSION ||
   '2026-07-08'
 
+const token = process.env.SANITY_API_TOKEN
+
 export const sanityConfig = {
   projectId,
   dataset,
@@ -26,4 +28,5 @@ export const sanity = createClient({
   apiVersion,
   useCdn: false,
   perspective: 'published',
+  token,
 })

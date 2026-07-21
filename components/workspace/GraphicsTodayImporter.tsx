@@ -63,12 +63,24 @@ export function GraphicsTodayImporter() {
   const [message, setMessage] = useState('')
   const [projectOptions, setProjectOptions] = useState<SanityProjectOption[]>([])
   const [autoMatched, setAutoMatched] = useState(false)
+  const [preferredProjectSlug, setPreferredProjectSlug] = useState('')
+  const [inspectingPage, setInspectingPage] = useState<PageChoice | null>(null)
+  const [inspectImage, setInspectImage] = useState('')
+  const [inspectZoom, setInspectZoom] = useState(1.25)
+  const [inspectLoading, setInspectLoading] = useState(false)
   const pdfRef = useRef<any>(null)
+  const inspectImageUrlRef = useRef<string | null>(null)
   const cancelled = useRef(false)
 
   useEffect(() => {
+    const querySlug = new URLSearchParams(window.location.search).get('projectSlug')
+    if (querySlug) setPreferredProjectSlug(slugify(querySlug))
+
     return () => {
       cancelled.current = true
+      if (inspectImageUrlRef.current) {
+        URL.revokeObjectURL(inspectImageUrlRef.current)
+      }
     }
   }, [])
 
@@ -163,8 +175,12 @@ export function GraphicsTodayImporter() {
     const initialName = nextFile.name
       .replace(/\.pdf$/i, '')
       .replace(/[-_]+/g, ' ')
+    const requestedSlug =
+      preferredProjectSlug ||
+      new URLSearchParams(window.location.search).get('projectSlug') ||
+      ''
     setProjectName(initialName)
-    setProjectSlug(slugify(initialName))
+    setProjectSlug(requestedSlug || slugify(initialName))
     setPages([])
     setRenderedCount(0)
     cancelled.current = false
@@ -186,6 +202,10 @@ export function GraphicsTodayImporter() {
         ? projectOptions
         : await loadProjectOptions()
 
+      const requestedProject = options.find(
+        (option) => option.slug === slugify(requestedSlug),
+      )
+
       let identificationText = nextFile.name
       const pagesToRead = Math.min(3, pdfDocument.numPages)
 
@@ -206,7 +226,11 @@ export function GraphicsTodayImporter() {
         options,
       )
 
-      if (matchedProject) {
+      if (requestedProject) {
+        setProjectName(requestedProject.name)
+        setProjectSlug(requestedProject.slug)
+        setAutoMatched(true)
+      } else if (matchedProject) {
         setProjectName(matchedProject.name)
         setProjectSlug(matchedProject.slug)
         setAutoMatched(true)
@@ -364,6 +388,49 @@ export function GraphicsTodayImporter() {
     return blob
   }
 
+  async function openInspector(item: PageChoice) {
+    if (!pdfRef.current) {
+      setMessage('Upload the PDF before inspecting sheets.')
+      return
+    }
+
+    setInspectingPage(item)
+    setInspectImage('')
+    setInspectZoom(1.25)
+    setInspectLoading(true)
+
+    try {
+      if (inspectImageUrlRef.current) {
+        URL.revokeObjectURL(inspectImageUrlRef.current)
+        inspectImageUrlRef.current = null
+      }
+
+      const blob = await renderHighResolution(item.page)
+      const url = URL.createObjectURL(blob)
+      inspectImageUrlRef.current = url
+      setInspectImage(url)
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Could not open the sheet inspector.',
+      )
+      setInspectingPage(null)
+    } finally {
+      setInspectLoading(false)
+    }
+  }
+
+  function closeInspector() {
+    setInspectingPage(null)
+    setInspectImage('')
+    setInspectZoom(1.25)
+    if (inspectImageUrlRef.current) {
+      URL.revokeObjectURL(inspectImageUrlRef.current)
+      inspectImageUrlRef.current = null
+    }
+  }
+
   async function downloadSelected() {
     if (!selected.length) {
       setMessage('Select at least one sheet.')
@@ -466,8 +533,11 @@ export function GraphicsTodayImporter() {
       }
 
       setMessage(
-        `Verified ${published} graphic${published === 1 ? '' : 's'} in Sanity: ${verifiedIds.join(', ')}`,
+        `Verified ${published} graphic${published === 1 ? '' : 's'} in Sanity. Opening the project page...`,
       )
+      window.setTimeout(() => {
+        window.location.href = `/projects/${projectSlug}`
+      }, 700)
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -605,11 +675,21 @@ export function GraphicsTodayImporter() {
               >
                 <div className="bg-slate-100 p-2">
                   {item.thumbnail ? (
-                    <img
-                      src={item.thumbnail}
-                      alt={`PDF page ${item.page}`}
-                      className="mx-auto max-h-72 w-auto object-contain"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => void openInspector(item)}
+                      className="group relative block w-full"
+                      aria-label={`Inspect page ${item.page}`}
+                    >
+                      <img
+                        src={item.thumbnail}
+                        alt={`PDF page ${item.page}`}
+                        className="mx-auto max-h-72 w-auto object-contain"
+                      />
+                      <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-md bg-slate-950 px-3 py-2 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
+                        Inspect sheet
+                      </span>
+                    </button>
                   ) : (
                     <div className="flex h-56 items-center justify-center text-sm text-slate-500">
                       Rendering page {item.page}…
@@ -626,6 +706,15 @@ export function GraphicsTodayImporter() {
                   </div>
 
                   <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => void openInspector(item)}
+                      disabled={!item.thumbnail}
+                      className="col-span-3 rounded-md border border-slate-300 px-2 py-2 text-xs font-bold disabled:opacity-40"
+                    >
+                      Inspect / zoom
+                    </button>
+
                     <button
                       type="button"
                       onClick={() => selectPage(item.page, 'primary')}
@@ -735,6 +824,15 @@ export function GraphicsTodayImporter() {
                 ? 'Publishing…'
                 : 'Publish graphics to website'}
             </button>
+
+            {projectSlug && (
+              <a
+                href={`/projects/${projectSlug}`}
+                className="rounded-lg border border-slate-300 px-5 py-3 font-bold"
+              >
+                View project page
+              </a>
+            )}
           </div>
         </section>
       )}
@@ -742,6 +840,79 @@ export function GraphicsTodayImporter() {
       {message && (
         <div className="rounded-xl border border-slate-300 bg-white p-4 text-sm font-semibold">
           {message}
+        </div>
+      )}
+
+      {inspectingPage && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-950/80 p-3 md:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Inspect page ${inspectingPage.page}`}
+        >
+          <div className="mx-auto flex h-full max-w-7xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
+            <div className="flex flex-col gap-3 border-b border-slate-200 p-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+                  Sheet inspector
+                </p>
+                <h2 className="mt-1 text-lg font-bold">
+                  Page {inspectingPage.page}
+                </h2>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setInspectZoom((value) => Math.max(0.75, value - 0.25))}
+                  className="rounded-md border border-slate-300 px-3 py-2 text-sm font-bold"
+                >
+                  Zoom out
+                </button>
+                <input
+                  type="range"
+                  min="0.75"
+                  max="3"
+                  step="0.25"
+                  value={inspectZoom}
+                  onChange={(event) => setInspectZoom(Number(event.target.value))}
+                  className="w-32"
+                  aria-label="Sheet zoom"
+                />
+                <button
+                  type="button"
+                  onClick={() => setInspectZoom((value) => Math.min(3, value + 0.25))}
+                  className="rounded-md border border-slate-300 px-3 py-2 text-sm font-bold"
+                >
+                  Zoom in
+                </button>
+                <button
+                  type="button"
+                  onClick={closeInspector}
+                  className="rounded-md bg-slate-950 px-4 py-2 text-sm font-bold text-white"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-auto bg-slate-100 p-4">
+              {inspectLoading && (
+                <div className="flex h-full min-h-[60vh] items-center justify-center text-sm font-bold text-slate-600">
+                  Rendering high-resolution sheet...
+                </div>
+              )}
+
+              {!inspectLoading && inspectImage && (
+                <img
+                  src={inspectImage}
+                  alt={`High-resolution PDF page ${inspectingPage.page}`}
+                  className="block max-w-none rounded-lg bg-white shadow"
+                  style={{width: `${inspectZoom * 100}%`}}
+                />
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

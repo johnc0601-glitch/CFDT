@@ -1,14 +1,20 @@
 export type Project = {
   _id: string
+  _updatedAt?: string
   name: string
   status?: string
   homesProposed?: number
+  singleFamilyDetachedUnits?: number
+  singleFamilyAttachedUnits?: number
+  multifamilyUnits?: number
   siteAcres?: number
   totalPropertyAcres?: number
   conservationFloodplainAcres?: number
   developer?: string
   engineer?: string
   parcelId?: string
+  parcelIds?: string[]
+  parcelAcres?: number
   projectType?: string
   approvingAuthority?: string
   locationDescription?: string
@@ -18,6 +24,19 @@ export type Project = {
   nextStep?: string
   countyName?: string
   municipalityName?: string
+  currentZoning?: string[]
+  floodZones?: string[]
+  possibleWetlands?: boolean
+  gisContext?: {
+    provider?: string
+    status?: 'verified' | 'partial' | 'unavailable'
+    verifiedAt?: string
+    requestedParcelIds?: string[]
+    unmatchedParcelIds?: string[]
+    warnings?: string[]
+    sourceUrl?: string
+    message?: string
+  }
   heroImageUrl?: string
   heroImageAlt?: string
   heroImageCaption?: string
@@ -73,5 +92,5 @@ export type Project = {
   watershed?: string
   applicant?: string
   owner?: string
-  [key: string]: any
+  [key: string]: unknown
 }
