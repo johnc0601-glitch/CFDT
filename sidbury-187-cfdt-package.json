@@ -1,0 +1,246 @@
+{
+  "packageVersion": "1.0",
+  "project": {
+    "name": "Sidbury 187",
+    "slug": "sidbury-187",
+    "county": "New Hanover County",
+    "caseNumber": "",
+    "status": "Approved",
+    "projectType": "Performance Residential Subdivision",
+    "approvingAuthority": "New Hanover County Technical Review Committee",
+    "summary": "Sidbury 187 is a large residential subdivision planned for northern New Hanover County near Castle Hayne. WilmingtonBiz reported that the project would be built on just over 700 acres bounded by Interstate 140, Sidbury Road, and Crooked Pine Road, adjacent to Sidbury Station. The plan includes 1,751 total housing units across single-family homes, townhomes, and duplexes, with D.R. Horton identified as the developer/builder and McKim & Creed tied to the project plans. The article also reported a three-phase buildout, with full buildout expected in 2032.",
+    "locationDescription": "Northern New Hanover County near Castle Hayne, on land bounded by Interstate 140, Sidbury Road, and Crooked Pine Road, next to Sidbury Station.",
+    "homesProposed": 1751,
+    "residentialUnits": 1751,
+    "siteAcres": 700,
+    "acreage": 700,
+    "buildableAcres": 0,
+    "commercialSquareFeet": 0,
+    "developer": "D.R. Horton",
+    "applicant": "D.R. Horton / McKim & Creed",
+    "owner": "Corbett Package Co. and Corbett Industries",
+    "engineer": "McKim & Creed",
+    "zoning": "R-15",
+    "latestUpdateDate": "2024-06-17",
+    "latestUpdate": "WilmingtonBiz reported that the project went before New Hanover County's Technical Review Committee in June 2024.",
+    "nextStep": "Verify the official New Hanover County TRC packet, approval letter, and final construction-plan status before public publication.",
+    "parcels": [],
+    "roads": [
+      "Interstate 140",
+      "Sidbury Road",
+      "Crooked Pine Road"
+    ]
+  },
+  "timeline": [
+    {
+      "date": "2024-06-05",
+      "title": "Technical Review Committee meeting",
+      "label": "TRC Review",
+      "stageStatus": "complete",
+      "status": "complete",
+      "description": "New Hanover County's residential project listing identifies Sidbury 187 as a 1,751-unit performance residential development with a June 5, 2024 TRC meeting date and approved status.",
+      "sourceDocument": "New Hanover County Residential Projects listing",
+      "sourcePage": null
+    },
+    {
+      "date": "2024-06-17",
+      "title": "Project details reported",
+      "label": "News Report",
+      "stageStatus": "current",
+      "status": "current",
+      "description": "WilmingtonBiz reported the proposed subdivision would include 1,751 total housing units on just over 700 acres near Castle Hayne, with D.R. Horton developing the project and McKim & Creed credited for the site plan.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "date": "2029",
+      "title": "Phase 1 planned",
+      "label": "Phase 1",
+      "stageStatus": "future",
+      "status": "future",
+      "description": "WilmingtonBiz reported phase one was planned for 2029.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "date": "2030",
+      "title": "Phase 2 planned",
+      "label": "Phase 2",
+      "stageStatus": "future",
+      "status": "future",
+      "description": "WilmingtonBiz reported phase two was planned for 2030.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "date": "2032",
+      "title": "Full buildout expected",
+      "label": "Buildout",
+      "stageStatus": "future",
+      "status": "future",
+      "description": "WilmingtonBiz reported full buildout was expected in 2032.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    }
+  ],
+  "traffic": {
+    "trafficStudyProvided": true,
+    "tiaDate": "",
+    "trafficEngineer": "",
+    "dailyTrips": 14093,
+    "amPeakTrips": 999,
+    "pmPeakTrips": 1378,
+    "buildOutYear": 2032,
+    "accessRoads": [
+      "Sidbury Road",
+      "Crooked Pine Road",
+      "Interstate 140"
+    ],
+    "improvements": [
+      "Extend existing turn lanes",
+      "Add new turn lanes",
+      "Install new traffic lights"
+    ],
+    "trafficCounts": "14,093 daily vehicle trips; 999 AM peak-hour trips; 1,378 PM peak-hour trips.",
+    "roadImprovements": "The article reports the traffic impact analysis recommended extending existing turn lanes, adding new turn lanes, and installing new traffic lights.",
+    "notes": "Traffic totals and improvements are from WilmingtonBiz's summary of the traffic impact analysis. Replace with the official TIA PDF if the county document is located."
+  },
+  "metrics": {
+    "phases": 3,
+    "fullBuildoutYear": 2032,
+    "reportedAcreage": "Just over 700 acres"
+  },
+  "documents": [
+    {
+      "title": "Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "documentType": "News Article",
+      "category": "News",
+      "sourceUrl": "https://www.wilmingtonbiz.com/real_estate_-_commercial/2024/06/14/proposed_castle_hayne_projects_could_bring_thousands_of_homes_commercial_space/25695",
+      "storagePath": "",
+      "date": "2024-06-17",
+      "notes": "Primary interim source for Sidbury 187 project facts until the original New Hanover County TRC packet or site plan PDF is recovered."
+    },
+    {
+      "title": "New Hanover County Residential Projects listing",
+      "documentType": "County Project Listing",
+      "category": "Official Listing",
+      "sourceUrl": "https://www.nhcgov.com/595/Residential-Projects",
+      "storagePath": "",
+      "date": "2024-06-05",
+      "notes": "Official county listing confirms project name, address, zoning, unit count, TRC meeting date, and approved status."
+    }
+  ],
+  "graphicsSuggestions": [
+    {
+      "label": "Site Plan",
+      "category": "Neighborhood Layout",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "pageNumber": null,
+      "confidence": "medium",
+      "reason": "The article includes a site-plan image credited to McKim & Creed, but the original plan PDF should still be located for final graphics."
+    },
+    {
+      "label": "Traffic & Access",
+      "category": "Traffic & Access",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "pageNumber": null,
+      "confidence": "medium",
+      "reason": "The article identifies I-140, Sidbury Road, Crooked Pine Road, trip totals, and recommended traffic improvements."
+    }
+  ],
+  "communityConcerns": [
+    {
+      "topic": "Scale of growth",
+      "summary": "The project is reported as 1,751 total housing units on just over 700 acres near Castle Hayne.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "topic": "Traffic",
+      "summary": "The reported traffic impact analysis estimates 14,093 daily vehicle trips, with 999 AM peak-hour trips and 1,378 PM peak-hour trips. The article says improvements may include turn-lane extensions, new turn lanes, and traffic lights.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "topic": "Phasing",
+      "summary": "The article reports a three-phase buildout, with phase one planned for 2029, phase two planned for 2030, and full buildout expected in 2032.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    }
+  ],
+  "sourceReferences": [
+    {
+      "field": "homesProposed",
+      "value": "1,751 total housing units",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "field": "siteAcres",
+      "value": "Just over 700 acres",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "field": "traffic",
+      "value": "14,093 daily trips; 999 AM peak-hour trips; 1,378 PM peak-hour trips",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "field": "location",
+      "value": "Bounded by Interstate 140, Sidbury Road, and Crooked Pine Road",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "title": "WilmingtonBiz article",
+      "url": "https://www.wilmingtonbiz.com/real_estate_-_commercial/2024/06/14/proposed_castle_hayne_projects_could_bring_thousands_of_homes_commercial_space/25695",
+      "sourceDocument": "WilmingtonBiz",
+      "notes": "News summary of planning documents and traffic impact analysis. Use as interim source until official PDFs are obtained."
+    },
+    {
+      "title": "New Hanover County Residential Projects",
+      "url": "https://www.nhcgov.com/595/Residential-Projects",
+      "sourceDocument": "New Hanover County Planning & Land Use",
+      "notes": "Official listing for residential development activity. Confirms the county record for Sidbury 187."
+    }
+  ],
+  "reviewFlags": [
+    {
+      "field": "caseNumber",
+      "severity": "missing",
+      "message": "No formal case number was identified in the article or county listing excerpt.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "field": "sourceType",
+      "severity": "review",
+      "message": "Most detailed facts are from a news article summarizing planning documents, not from the official TRC packet. Replace with official county PDFs when located.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "field": "siteAcres",
+      "severity": "review",
+      "message": "Acreage is reported as 'just over 700 acres.' The package uses 700 for sorting, but the displayed text should describe it as just over 700 acres unless an exact acreage is verified.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    },
+    {
+      "field": "traffic",
+      "severity": "review",
+      "message": "Traffic numbers are article-reported from a traffic impact analysis. The TIA PDF should be attached if found.",
+      "sourceDocument": "WilmingtonBiz - Proposed Castle Hayne Projects Could Bring Thousands Of Homes, Commercial Space",
+      "sourcePage": null
+    }
+  ],
+  "reviewNotes": [
+    "This is an interim package generated from the WilmingtonBiz article and New Hanover County's public residential project listing.",
+    "Find and replace with the official New Hanover County TRC packet, site plan, and traffic impact analysis when available.",
+    "Use 700 acres only as a sortable numeric approximation; public copy should say just over 700 acres.",
+    "No formal case number or parcel IDs were verified from the article.",
+    "The project name appears in county records as Sidbury 187; the article describes the land as Sidbury 187 and Gore tracts."
+  ]
+}

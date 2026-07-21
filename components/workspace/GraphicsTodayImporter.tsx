@@ -11,6 +11,10 @@ type PageChoice = {
   category: string
   title: string
   description: string
+  sourceType: 'pdf' | 'image'
+  sourceName: string
+  imageFile?: File
+  imageObjectUrl?: string
 }
 
 type SanityProjectOption = {
@@ -70,6 +74,7 @@ export function GraphicsTodayImporter() {
   const [inspectLoading, setInspectLoading] = useState(false)
   const pdfRef = useRef<any>(null)
   const inspectImageUrlRef = useRef<string | null>(null)
+  const imageObjectUrlsRef = useRef<string[]>([])
   const cancelled = useRef(false)
 
   useEffect(() => {
@@ -81,6 +86,7 @@ export function GraphicsTodayImporter() {
       if (inspectImageUrlRef.current) {
         URL.revokeObjectURL(inspectImageUrlRef.current)
       }
+      clearImageObjectUrls()
     }
   }, [])
 
@@ -118,6 +124,11 @@ export function GraphicsTodayImporter() {
       .replace(/[^a-z0-9]+/g, ' ')
       .replace(/\s+/g, ' ')
       .trim()
+  }
+
+  function clearImageObjectUrls() {
+    imageObjectUrlsRef.current.forEach((url) => URL.revokeObjectURL(url))
+    imageObjectUrlsRef.current = []
   }
 
   function findBestProjectMatch(
@@ -168,10 +179,12 @@ export function GraphicsTodayImporter() {
   async function loadPdf(nextFile: File | null) {
     if (!nextFile) return
 
+    clearImageObjectUrls()
     setLoading(true)
     setMessage('Reading plan title and rendering page thumbnails…')
     setFile(nextFile)
     setAutoMatched(false)
+    pdfRef.current = null
     const initialName = nextFile.name
       .replace(/\.pdf$/i, '')
       .replace(/[-_]+/g, ' ')
@@ -244,6 +257,8 @@ export function GraphicsTodayImporter() {
           category: index === 0 ? 'Hero' : 'Site Plan',
           title: `Plan Sheet ${index + 1}`,
           description: '',
+          sourceType: 'pdf' as const,
+          sourceName: nextFile.name,
         })),
       )
 
@@ -304,6 +319,119 @@ export function GraphicsTodayImporter() {
     } finally {
       setLoading(false)
     }
+  }
+
+  async function loadImages(files: File[]) {
+    const imageFiles = files.filter((item) => item.type.startsWith('image/'))
+    if (!imageFiles.length) return
+
+    clearImageObjectUrls()
+
+    setLoading(true)
+    setMessage('Preparing image graphics...')
+    setFile(imageFiles[0])
+    setAutoMatched(false)
+    setPages([])
+    setRenderedCount(0)
+    pdfRef.current = null
+    cancelled.current = false
+
+    const requestedSlug =
+      preferredProjectSlug ||
+      new URLSearchParams(window.location.search).get('projectSlug') ||
+      ''
+    const initialName = imageFiles[0].name
+      .replace(/\.[a-z0-9]+$/i, '')
+      .replace(/[-_]+/g, ' ')
+
+    setProjectName(initialName)
+    setProjectSlug(requestedSlug || slugify(initialName))
+
+    try {
+      const options = projectOptions.length
+        ? projectOptions
+        : await loadProjectOptions()
+
+      const requestedProject = options.find(
+        (option) => option.slug === slugify(requestedSlug),
+      )
+      const matchedProject = findBestProjectMatch(
+        imageFiles.map((item) => item.name).join(' '),
+        options,
+      )
+
+      if (requestedProject) {
+        setProjectName(requestedProject.name)
+        setProjectSlug(requestedProject.slug)
+        setAutoMatched(true)
+      } else if (matchedProject) {
+        setProjectName(matchedProject.name)
+        setProjectSlug(matchedProject.slug)
+        setAutoMatched(true)
+      }
+
+      const imagePages = imageFiles.map((imageFile, index) => {
+        const imageUrl = URL.createObjectURL(imageFile)
+        imageObjectUrlsRef.current.push(imageUrl)
+        const title = imageFile.name
+          .replace(/\.[a-z0-9]+$/i, '')
+          .replace(/[-_]+/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim()
+
+        return {
+          page: index + 1,
+          role: index === 0 ? 'primary' as PageRole : 'graphic' as PageRole,
+          thumbnail: imageUrl,
+          category: index === 0 ? 'Hero' : 'Site Plan',
+          title: title || `Image Graphic ${index + 1}`,
+          description: '',
+          sourceType: 'image' as const,
+          sourceName: imageFile.name,
+          imageFile,
+          imageObjectUrl: imageUrl,
+        }
+      })
+
+      setPages(imagePages)
+      setRenderedCount(imagePages.length)
+      setMessage(
+        matchedProject
+          ? `Matched ${imagePages.length} image graphic${imagePages.length === 1 ? '' : 's'} to ${matchedProject.name}.`
+          : `Prepared ${imagePages.length} image graphic${imagePages.length === 1 ? '' : 's'}. Confirm the website project before publishing.`,
+      )
+    } catch (error) {
+      setPages([])
+      setFile(null)
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Could not prepare the image graphics.',
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function loadGraphicFiles(files: File[]) {
+    const pdfFiles = files.filter(
+      (item) =>
+        item.type === 'application/pdf' ||
+        item.name.toLowerCase().endsWith('.pdf'),
+    )
+    const imageFiles = files.filter((item) => item.type.startsWith('image/'))
+
+    if (pdfFiles.length) {
+      await loadPdf(pdfFiles[0])
+      return
+    }
+
+    if (imageFiles.length) {
+      await loadImages(imageFiles)
+      return
+    }
+
+    setMessage('Choose a PDF, JPG, PNG, or WebP file.')
   }
 
   function updatePage(pageNumber: number, patch: Partial<PageChoice>) {
@@ -388,9 +516,43 @@ export function GraphicsTodayImporter() {
     return blob
   }
 
+  async function renderDirectImage(item: PageChoice) {
+    if (!item.imageFile) throw new Error('Image file is not loaded.')
+
+    const bitmap = await createImageBitmap(item.imageFile)
+    const maxWidth = 2400
+    const scale = Math.min(1, maxWidth / bitmap.width)
+    const canvas = window.document.createElement('canvas')
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale))
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale))
+
+    const context = canvas.getContext('2d')
+    if (!context) throw new Error('Could not create image canvas.')
+
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (result) =>
+          result
+            ? resolve(result)
+            : reject(new Error('Could not create PNG image.')),
+        'image/png',
+      )
+    })
+
+    bitmap.close()
+    return blob
+  }
+
+  async function renderGraphicImage(item: PageChoice) {
+    if (item.sourceType === 'image') return renderDirectImage(item)
+    return renderHighResolution(item.page)
+  }
+
   async function openInspector(item: PageChoice) {
-    if (!pdfRef.current) {
-      setMessage('Upload the PDF before inspecting sheets.')
+    if (item.sourceType === 'pdf' && !pdfRef.current) {
+      setMessage('Upload the PDF before inspecting this graphic.')
       return
     }
 
@@ -405,7 +567,7 @@ export function GraphicsTodayImporter() {
         inspectImageUrlRef.current = null
       }
 
-      const blob = await renderHighResolution(item.page)
+      const blob = await renderGraphicImage(item)
       const url = URL.createObjectURL(blob)
       inspectImageUrlRef.current = url
       setInspectImage(url)
@@ -413,7 +575,7 @@ export function GraphicsTodayImporter() {
       setMessage(
         error instanceof Error
           ? error.message
-          : 'Could not open the sheet inspector.',
+          : 'Could not open the graphic inspector.',
       )
       setInspectingPage(null)
     } finally {
@@ -433,7 +595,7 @@ export function GraphicsTodayImporter() {
 
   async function downloadSelected() {
     if (!selected.length) {
-      setMessage('Select at least one sheet.')
+      setMessage('Select at least one graphic.')
       return
     }
 
@@ -442,7 +604,7 @@ export function GraphicsTodayImporter() {
 
     try {
       for (const item of selected) {
-        const blob = await renderHighResolution(item.page)
+        const blob = await renderGraphicImage(item)
         downloadBlob(
           `${projectSlug || 'project'}-${item.category
             .toLowerCase()
@@ -471,7 +633,7 @@ export function GraphicsTodayImporter() {
     }
 
     if (!selected.length) {
-      setMessage('Select at least one sheet.')
+      setMessage('Select at least one graphic.')
       return
     }
 
@@ -488,7 +650,7 @@ export function GraphicsTodayImporter() {
           `Publishing ${index + 1} of ${selected.length}: ${item.title}`,
         )
 
-        const image = await renderHighResolution(item.page)
+        const image = await renderGraphicImage(item)
         const form = new FormData()
         form.set('projectSlug', projectSlug)
         form.set('title', item.title)
@@ -499,7 +661,7 @@ export function GraphicsTodayImporter() {
           item.description ||
             `Official project plan graphic from page ${item.page}.`,
         )
-        form.set('sourceDocument', file?.name || 'Official project plan')
+        form.set('sourceDocument', item.sourceName || file?.name || 'Project graphic')
         form.set('sourcePage', String(item.page))
         form.set('displayOrder', String(index))
         form.set(
@@ -556,24 +718,34 @@ export function GraphicsTodayImporter() {
           Graphics today
         </p>
         <h2 className="mt-2 text-2xl font-bold">
-          Select plan sheets and publish them
+          Select plan graphics and publish them
         </h2>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
-          Choose the complete PDF, select the useful sheets visually, label them,
-          and publish high-resolution graphics directly to the existing project page.
+          Choose the complete PDF or drop already-found plan images, label them,
+          and publish web-ready graphics directly to the existing project page.
         </p>
 
-        <label className="mt-5 block cursor-pointer rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-          <span className="font-bold">Choose project-plan PDF</span>
+        <label
+          className="mt-5 block cursor-pointer rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center"
+          onDragOver={(event) => {
+            event.preventDefault()
+          }}
+          onDrop={(event) => {
+            event.preventDefault()
+            void loadGraphicFiles(Array.from(event.dataTransfer.files))
+          }}
+        >
+          <span className="font-bold">Choose or drop PDF/images</span>
           <span className="mt-1 block text-sm text-slate-500">
-            The PDF stays in your browser.
+            Use PDFs for full packets, or JPG/PNG/WebP files for older developments.
           </span>
           <input
             type="file"
-            accept=".pdf,application/pdf"
+            multiple
+            accept=".pdf,application/pdf,image/png,image/jpeg,image/webp"
             className="sr-only"
             onChange={(event) =>
-              void loadPdf(event.target.files?.[0] || null)
+              void loadGraphicFiles(Array.from(event.target.files || []))
             }
           />
         </label>
@@ -640,7 +812,9 @@ export function GraphicsTodayImporter() {
 
         {file && (
           <p className="mt-4 text-sm text-slate-600">
-            {renderedCount} of {pages.length} thumbnails rendered
+            {pages[0]?.sourceType === 'image'
+              ? `${renderedCount} image graphic${renderedCount === 1 ? '' : 's'} ready`
+              : `${renderedCount} of ${pages.length} thumbnails rendered`}
           </p>
         )}
       </section>
@@ -651,7 +825,7 @@ export function GraphicsTodayImporter() {
             <div>
               <h2 className="text-xl font-bold">Choose graphics</h2>
               <p className="mt-2 text-sm text-slate-600">
-                Mark one sheet as Hero and any other useful sheets as Graphic.
+                Mark one item as Hero and any other useful items as Graphic.
                 Then set the website category and title.
               </p>
             </div>
@@ -679,27 +853,27 @@ export function GraphicsTodayImporter() {
                       type="button"
                       onClick={() => void openInspector(item)}
                       className="group relative block w-full"
-                      aria-label={`Inspect page ${item.page}`}
+                      aria-label={`Inspect ${item.sourceType === 'image' ? 'image' : 'page'} ${item.page}`}
                     >
                       <img
                         src={item.thumbnail}
-                        alt={`PDF page ${item.page}`}
+                        alt={`${item.sourceType === 'image' ? 'Image graphic' : 'PDF page'} ${item.page}`}
                         className="mx-auto max-h-72 w-auto object-contain"
                       />
                       <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-md bg-slate-950 px-3 py-2 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
-                        Inspect sheet
+                        Inspect graphic
                       </span>
                     </button>
                   ) : (
                     <div className="flex h-56 items-center justify-center text-sm text-slate-500">
-                      Rendering page {item.page}…
+                      Preparing item {item.page}...
                     </div>
                   )}
                 </div>
 
                 <div className="space-y-3 p-4">
                   <div className="flex items-center justify-between">
-                    <strong>Page {item.page}</strong>
+                    <strong>{item.sourceType === 'image' ? 'Image' : 'Page'} {item.page}</strong>
                     <span className="text-xs font-bold uppercase text-slate-500">
                       {item.role}
                     </span>
@@ -848,16 +1022,16 @@ export function GraphicsTodayImporter() {
           className="fixed inset-0 z-50 bg-slate-950/80 p-3 md:p-6"
           role="dialog"
           aria-modal="true"
-          aria-label={`Inspect page ${inspectingPage.page}`}
+          aria-label={`Inspect ${inspectingPage.sourceType === 'image' ? 'image' : 'page'} ${inspectingPage.page}`}
         >
           <div className="mx-auto flex h-full max-w-7xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
             <div className="flex flex-col gap-3 border-b border-slate-200 p-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                  Sheet inspector
+                  Graphic inspector
                 </p>
                 <h2 className="mt-1 text-lg font-bold">
-                  Page {inspectingPage.page}
+                  {inspectingPage.sourceType === 'image' ? 'Image' : 'Page'} {inspectingPage.page}
                 </h2>
               </div>
 
@@ -899,14 +1073,14 @@ export function GraphicsTodayImporter() {
             <div className="flex-1 overflow-auto bg-slate-100 p-4">
               {inspectLoading && (
                 <div className="flex h-full min-h-[60vh] items-center justify-center text-sm font-bold text-slate-600">
-                  Rendering high-resolution sheet...
+                  Preparing high-resolution graphic...
                 </div>
               )}
 
               {!inspectLoading && inspectImage && (
                 <img
                   src={inspectImage}
-                  alt={`High-resolution PDF page ${inspectingPage.page}`}
+                  alt={`High-resolution ${inspectingPage.sourceType === 'image' ? 'image graphic' : 'PDF page'} ${inspectingPage.page}`}
                   className="block max-w-none rounded-lg bg-white shadow"
                   style={{width: `${inspectZoom * 100}%`}}
                 />
