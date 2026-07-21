@@ -34,6 +34,36 @@ function statusTone(status?: string) {
   return 'bg-[#e8edf1] text-[#29445f]'
 }
 
+function isApprovedProject(project: Project) {
+  const designator = project.approvalStatus?.toLowerCase() || ''
+  const status = project.status?.toLowerCase() || ''
+  return (
+    designator.includes('approved') ||
+    designator.includes('built') ||
+    (
+      !designator &&
+      status.includes('approved') &&
+      !status.includes('pending') &&
+      !status.includes('review')
+    )
+  )
+}
+
+function isPendingDecision(project: Project) {
+  const designator = project.approvalStatus?.toLowerCase() || ''
+  if (designator.includes('pending')) return true
+  if (
+    designator.includes('approved') ||
+    designator.includes('built') ||
+    designator.includes('denied')
+  ) {
+    return false
+  }
+
+  const status = project.status?.toLowerCase() || ''
+  return status.includes('pending') || status.includes('review')
+}
+
 function countyCounts(projects: Project[]) {
   return counties.map((county) => {
     const normalizedName = normalizeCountyName(county.name)
@@ -214,13 +244,13 @@ export default async function Home() {
   const stats = getProjectStats(projects)
   const countySnapshots = countyCounts(projects)
   const acresUnderReview = projects.reduce(
-    (sum, project) => sum + (project.siteAcres ?? project.totalSiteAcres ?? 0),
+    (sum, project) =>
+      isApprovedProject(project)
+        ? sum
+        : sum + (project.siteAcres ?? project.totalSiteAcres ?? 0),
     0,
   )
-  const pendingDecisions = projects.filter((project) => {
-    const status = project.status?.toLowerCase() || ''
-    return status.includes('pending') || status.includes('review')
-  }).length
+  const pendingDecisions = projects.filter(isPendingDecision).length
   const featured =
     projects.find((project) => project.name.toLowerCase().includes('piver')) ||
     projects.find((project) => project.heroImageUrl) ||

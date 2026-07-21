@@ -37,6 +37,13 @@ function optionalNumber(value: unknown) {
   return Number.isFinite(number) && number > 0 ? number : undefined
 }
 
+function optionalCount(value: unknown) {
+  const number = typeof value === 'number'
+    ? value
+    : Number(text(value))
+  return Number.isFinite(number) && number >= 0 ? number : undefined
+}
+
 function optionalCoordinate(value: unknown) {
   const number = typeof value === 'number'
     ? value
@@ -98,8 +105,12 @@ export async function GET(
       name,
       caseNumber,
       status,
+      approvalStatus,
       projectType,
       homesProposed,
+      homesApproved,
+      homesBuilt,
+      homesRemaining,
       singleFamilyDetachedUnits,
       singleFamilyAttachedUnits,
       multifamilyUnits,
@@ -170,8 +181,12 @@ export async function PATCH(
         name: text(enriched.name) || undefined,
         caseNumber: text(enriched.caseNumber) || undefined,
         status: text(enriched.status) || undefined,
+        approvalStatus: text(enriched.approvalStatus) || undefined,
         projectType: text(enriched.projectType) || undefined,
         homesProposed: optionalNumber(enriched.homesProposed),
+        homesApproved: optionalCount(enriched.homesApproved),
+        homesBuilt: optionalCount(enriched.homesBuilt),
+        homesRemaining: optionalCount(enriched.homesRemaining),
         singleFamilyDetachedUnits: optionalNumber(enriched.singleFamilyDetachedUnits),
         singleFamilyAttachedUnits: optionalNumber(enriched.singleFamilyAttachedUnits),
         multifamilyUnits: optionalNumber(enriched.multifamilyUnits),

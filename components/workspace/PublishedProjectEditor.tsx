@@ -14,8 +14,12 @@ type ProjectEditorData = {
   slug?: string
   caseNumber?: string
   status?: string
+  approvalStatus?: string
   projectType?: string
   homesProposed?: number
+  homesApproved?: number
+  homesBuilt?: number
+  homesRemaining?: number
   singleFamilyDetachedUnits?: number
   singleFamilyAttachedUnits?: number
   multifamilyUnits?: number
@@ -209,8 +213,17 @@ export function PublishedProjectEditor({slug}: {slug: string}) {
           <TextField label="Project name" value={project.name} onChange={(value) => update('name', value)} />
           <TextField label="Case number" value={project.caseNumber} onChange={(value) => update('caseNumber', value)} />
           <TextField label="Status" value={project.status} onChange={(value) => update('status', value)} />
+          <SelectField
+            label="Approval designator"
+            value={project.approvalStatus}
+            options={['Pending', 'Approved', 'Partially approved', 'Denied', 'Built / completed']}
+            onChange={(value) => update('approvalStatus', value)}
+          />
           <TextField label="Project type" value={project.projectType} onChange={(value) => update('projectType', value)} />
           <NumberField label="Homes proposed" value={project.homesProposed} onChange={(value) => update('homesProposed', value)} />
+          <NumberField label="Homes approved" value={project.homesApproved} onChange={(value) => update('homesApproved', value)} />
+          <NumberField label="Homes built" value={project.homesBuilt} onChange={(value) => update('homesBuilt', value)} />
+          <NumberField label="Homes remaining" value={project.homesRemaining} onChange={(value) => update('homesRemaining', value)} />
           <NumberField label="Single-family detached" value={project.singleFamilyDetachedUnits} onChange={(value) => update('singleFamilyDetachedUnits', value)} />
           <NumberField label="Townhomes / attached" value={project.singleFamilyAttachedUnits} onChange={(value) => update('singleFamilyAttachedUnits', value)} />
           <NumberField label="Multifamily" value={project.multifamilyUnits} onChange={(value) => update('multifamilyUnits', value)} />
@@ -332,6 +345,38 @@ function TextField({
         onChange={(event) => onChange(event.target.value)}
         className="mt-2 h-11 w-full rounded-lg border border-slate-300 px-3"
       />
+    </label>
+  )
+}
+
+function SelectField({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string
+  value?: string
+  options: string[]
+  onChange: (value: string) => void
+}) {
+  return (
+    <label className="block">
+      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+        {label}
+      </span>
+      <select
+        value={value || ''}
+        onChange={(event) => onChange(event.target.value)}
+        className="mt-2 h-11 w-full rounded-lg border border-slate-300 px-3"
+      >
+        <option value="">Not designated</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </label>
   )
 }

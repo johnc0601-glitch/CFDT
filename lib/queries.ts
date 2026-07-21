@@ -16,6 +16,7 @@ const projectFields = `
   caseNumber,
   name,
   status,
+  approvalStatus,
   homesProposed,
   singleFamilyDetachedUnits,
   singleFamilyAttachedUnits,

@@ -3,6 +3,7 @@ export type Project = {
   _updatedAt?: string
   name: string
   status?: string
+  approvalStatus?: string
   homesProposed?: number
   singleFamilyDetachedUnits?: number
   singleFamilyAttachedUnits?: number
